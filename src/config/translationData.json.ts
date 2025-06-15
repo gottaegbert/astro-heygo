@@ -56,16 +56,16 @@ export const dataTranslations = {
  */
 export const textTranslations = {
 	en: {
-		hero_text: "Amplify your next website",
+		hero_text: "HeyGo - Your AI Snowboarding Coach, Effortless Ride Made Easy；",
 		hero_description:
-			"An electric template for the next killer SaaS. Multiple pages and sections, blog, i18n, animations, CMS - all ready to go.",
+			"HeyGo gives snowboarders the real-time insights and precision feedback once only available to pros.",
 		back_to_all_posts: "Back to all posts",
 		updated: "Updated",
 	},
 	fr: {
-		hero_text: "Amplifiez votre site Web en français",
+		hero_text: "HeyGo",
 		hero_description:
-			"Je ne parle pas vraiment français donc j'utilise Google Translate pour quelques parties de cette démo.",
+			"Votre entraîneur AI de snowboard, la montée en puissance sans effort",
 		back_to_all_posts: "Retour à tous les articles",
 		updated: "Mis à jour",
 	},

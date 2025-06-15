@@ -1,0 +1,362 @@
+---
+/**
+ * * HeyGo Digital Mountain - Futuristic Ski Slope with Lightning
+ * Features: Digital mountain terrain, lightning ski paths, data particles
+ */
+---
+
+<div class="heygo-digital-mountain relative w-full h-full">
+	<canvas id="mountain-webgl-canvas" class="w-full h-full absolute inset-0"></canvas>
+	<canvas id="lightning-overlay-canvas" class="w-full h-full absolute inset-0"></canvas>
+	
+	<!-- HUD Overlay -->
+	<div class="absolute inset-0 pointer-events-none">
+		<!-- Speed indicator -->
+		<div class="absolute top-8 left-8 text-[#00E0FF] font-mono">
+			<div class="text-sm opacity-70">ALTITUDE</div>
+			<div class="text-2xl font-bold">
+				<span id="altitude-value">2840</span> <span class="text-sm">m</span>
+			</div>
+		</div>
+		
+		<!-- Slope gradient -->
+		<div class="absolute top-8 right-8 text-[#00E0FF] font-mono">
+			<div class="text-sm opacity-70">GRADIENT</div>
+			<div class="text-2xl font-bold">
+				<span id="gradient-value">32</span><span class="text-sm">°</span>
+			</div>
+		</div>
+		
+		<!-- Data streams indicator -->
+		<div class="absolute bottom-8 left-8 text-[#00E0FF] font-mono">
+			<div class="text-xs opacity-70">TRAIL MAPPING</div>
+			<div class="flex gap-2 mt-1">
+				<div class="w-2 h-2 bg-[#00E0FF] rounded-full animate-pulse"></div>
+				<div class="w-2 h-2 bg-[#00E0FF] rounded-full animate-pulse" style="animation-delay: 0.2s"></div>
+				<div class="w-2 h-2 bg-[#00E0FF] rounded-full animate-pulse" style="animation-delay: 0.4s"></div>
+			</div>
+		</div>
+		
+		<!-- Terrain analysis -->
+		<div class="absolute bottom-8 right-8 text-[#00E0FF] font-mono text-xs">
+			<div class="opacity-70">TERRAIN</div>
+			<div class="mt-1">
+				<div>SNOW DEPTH: <span class="text-white">45cm</span></div>
+				<div>VISIBILITY: <span class="text-white">95%</span></div>
+				<div>CONDITIONS: <span class="text-white">OPTIMAL</span></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	import * as THREE from 'three';
+	import { createNoise2D } from 'simplex-noise';
+
+	class HeyGoDigitalMountain {
+		constructor() {
+			this.webglCanvas = document.getElementById('mountain-webgl-canvas');
+			this.lightningCanvas = document.getElementById('lightning-overlay-canvas');
+			
+			// WebGL setup
+			this.scene = new THREE.Scene();
+			this.camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.1, 1000);
+			this.renderer = new THREE.WebGLRenderer({ 
+				canvas: this.webglCanvas, 
+				antialias: true, 
+				alpha: true 
+			});
+			
+			// Lightning setup
+			this.lightningContext = this.lightningCanvas.getContext('2d');
+			this.lightningPoints = [];
+			// this.dataParticles = [];
+			this.time = 0;
+			
+			this.init();
+		}
+
+		init() {
+			// Setup WebGL renderer
+			this.renderer.setSize(this.webglCanvas.clientWidth, this.webglCanvas.clientHeight);
+			this.renderer.setClearColor(0x000000, 0);
+			this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+			// Setup camera position
+			this.camera.position.set(0, 2, 0);
+			this.camera.lookAt(0, 0, 0);
+
+			// Create digital mountain
+			this.createDigitalMountain();
+			// this.createDataParticles();
+			this.setupLighting();
+
+			// Setup lightning overlay
+			this.setupLightningOverlay();
+
+			// Start animation
+			this.animate();
+			this.updateHUD();
+
+			// Handle resize
+			window.addEventListener('resize', this.onWindowResize.bind(this));
+		}
+
+		createDigitalMountain() {
+			// Create main mountain with digital wireframe effect
+			const mountainGeometry = new THREE.PlaneGeometry(10, 10, 100, 100);
+			const vertices = mountainGeometry.attributes.position.array;
+			
+			// Add height variations to create mountain shape
+			const noise2D = createNoise2D();
+			for (let i = 0; i < vertices.length; i += 3) {
+				const x = vertices[i];
+				const y = vertices[i + 1];
+				const height = noise2D(x * 0.3, y * 0.9) * 1 + 
+							  noise2D(x * 0.4, y * 0.9) * 1;
+				vertices[i + 2] = height;
+			}
+			mountainGeometry.attributes.position.needsUpdate = true;
+			mountainGeometry.computeVertexNormals();
+
+			// Create wireframe material with glow effect
+			const mountainMaterial = new THREE.MeshBasicMaterial({ 
+				color: 0x00E0FF,
+				wireframe: true,
+				transparent: true,
+				opacity: 0.3
+			});
+
+			const mountain = new THREE.Mesh(mountainGeometry, mountainMaterial);
+			mountain.rotation.x = 0;
+			mountain.position.y = -5;
+            mountain.rotation.x = Math.PI / 2;
+			this.scene.add(mountain);
+
+			// Add filled mountain base
+			const baseMaterial = new THREE.MeshBasicMaterial({ 
+				color: 0x1a1a1a,
+				transparent: true,
+				opacity: 0.3
+			});
+			const baseMountain = new THREE.Mesh(mountainGeometry.clone(), baseMaterial);
+			baseMountain.rotation.x = 0;
+			baseMountain.position.y = -5;
+            baseMountain.rotation.x = Math.PI / 2;
+			this.scene.add(baseMountain);
+
+			// Create mountain peak markers
+		}
+
+	
+		setupLighting() {
+			// Ambient lighting
+			const ambientLight = new THREE.AmbientLight(0x404040, 0.4);
+			this.scene.add(ambientLight);
+
+			// Directional light with cyan tint
+			const directionalLight = new THREE.DirectionalLight(0x00E0FF, 0.8);
+			directionalLight.position.set(5, 5, 5);
+			this.scene.add(directionalLight);
+		}
+
+		setupLightningOverlay() {
+			// Resize lightning canvas to match WebGL canvas
+			this.lightningCanvas.width = this.webglCanvas.clientWidth;
+			this.lightningCanvas.height = this.webglCanvas.clientHeight;
+
+			// Calculate 2D positions for lightning (mountain peak to base)
+			this.calculateLightningPoints();
+		}
+
+		calculateLightningPoints() {
+			const canvas = this.lightningCanvas;
+			const centerX = canvas.width * 0.5;
+			const centerY = canvas.height * 0.5;
+			
+			// Fixed start and end points for the ski trail lightning
+			this.lightningStart = {
+				x: centerX - canvas.width * 0.25,
+				y: centerY - canvas.height * 0.2
+			};
+			
+			this.lightningEnd = {
+				x: centerX + canvas.width * 0.25,
+				y: centerY + canvas.height * 0.25
+			};
+		}
+
+		drawLightning() {
+			const ctx = this.lightningContext;
+			ctx.clearRect(0, 0, this.lightningCanvas.width, this.lightningCanvas.height);
+			
+			const start = this.lightningStart;
+			const end = this.lightningEnd;
+			
+			// Create ski trail lightning path
+			const steps = 25;
+			const points = [];
+			const noise2D = createNoise2D();
+			
+			for (let i = 0; i <= steps; i++) {
+				const t = i / steps;
+				const x = start.x + (end.x - start.x) * t;
+				const y = start.y + (end.y - start.y) * t;
+				
+				// Add some noise for natural ski trail variation
+				const noiseOffset = noise2D(t * 2, this.time * 0.1) * 40 * Math.sin(Math.PI * t);
+				const offsetX = Math.sin(Math.atan2(end.y - start.y, end.x - start.x) + Math.PI/2) * noiseOffset;
+				const offsetY = Math.cos(Math.atan2(end.y - start.y, end.x - start.x) + Math.PI/2) * noiseOffset;
+				
+				points.push({
+					x: x + offsetX,
+					y: y + offsetY
+				});
+			}
+			
+			// Draw the main ski trail
+			ctx.save();
+			ctx.strokeStyle = '#00E0FF';
+			ctx.lineWidth = 1;
+			ctx.shadowBlur = 15;
+			ctx.shadowColor = '#00E0FF';
+			ctx.globalCompositeOperation = 'lighter';
+			
+			ctx.beginPath();
+			ctx.moveTo(points[0].x, points[0].y);
+			for (let i = 1; i < points.length; i++) {
+				ctx.lineTo(points[i].x, points[i].y);
+			}
+			ctx.stroke();
+			
+			// Draw thinner inner trail
+			ctx.strokeStyle = '#FFFFFF';
+			ctx.lineWidth = 1;
+			ctx.shadowBlur = 5;
+			ctx.beginPath();
+			ctx.moveTo(points[0].x, points[0].y);
+			for (let i = 1; i < points.length; i++) {
+				ctx.lineTo(points[i].x, points[i].y);
+			}
+			ctx.stroke();
+			
+			ctx.restore();
+			
+			// Draw trail markers
+			this.drawTrailMarkers(ctx, points);
+		}
+
+		drawTrailMarkers(ctx, points) {
+			// Draw start and end markers
+			ctx.save();
+			ctx.fillStyle = '#00E0FF';
+			ctx.shadowBlur = 10;
+			ctx.shadowColor = '#00E0FF';
+			
+			// Start marker (peak)
+			ctx.beginPath();
+			ctx.arc(this.lightningStart.x, this.lightningStart.y, 8, 0, Math.PI * 2);
+			ctx.fill();
+			
+			// End marker (base)
+			ctx.beginPath();
+			ctx.arc(this.lightningEnd.x, this.lightningEnd.y, 8, 0, Math.PI * 2);
+			ctx.fill();
+			
+			ctx.restore();
+		}
+
+		animate() {
+			requestAnimationFrame(this.animate.bind(this));
+			
+			this.time += 0.1;
+
+		
+
+			// Gentle camera sway
+			this.camera.position.x = Math.sin(this.time * 0.3) * 0.2;
+			this.camera.position.y = 2 + Math.cos(this.time * 0.2) * 0.1;
+
+			// Render WebGL scene
+			this.renderer.render(this.scene, this.camera);
+			
+			// Draw lightning overlay
+			this.drawLightning();
+		}
+
+		updateHUD() {
+			setInterval(() => {
+				// Update HUD values
+				const altitudeElement = document.getElementById('altitude-value');
+				const gradientElement = document.getElementById('gradient-value');
+				
+				if (altitudeElement) {
+					const altitude = (2800 + Math.random() * 100).toFixed(0);
+					altitudeElement.textContent = altitude;
+				}
+				
+				if (gradientElement) {
+					const gradient = (25 + Math.random() * 15).toFixed(0);
+					gradientElement.textContent = gradient;
+				}
+			}, 150);
+		}
+
+		onWindowResize() {
+			const width = this.webglCanvas.clientWidth;
+			const height = this.webglCanvas.clientHeight;
+
+			// Resize WebGL
+			this.camera.aspect = width / height;
+			this.camera.updateProjectionMatrix();
+			this.renderer.setSize(width, height);
+
+			// Resize lightning canvas
+			this.lightningCanvas.width = width;
+			this.lightningCanvas.height = height;
+			
+			// Recalculate lightning points
+			this.calculateLightningPoints();
+		}
+	}
+
+	// Initialize when DOM is loaded
+	function initDigitalMountain() {
+		const canvas = document.getElementById('mountain-webgl-canvas');
+		if (canvas && !canvas.dataset.initialized) {
+			new HeyGoDigitalMountain();
+			canvas.dataset.initialized = 'true';
+		}
+	}
+
+	// Run on initial load
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', initDigitalMountain);
+	} else {
+		initDigitalMountain();
+	}
+
+	// Run on view transitions
+	document.addEventListener('astro:after-swap', initDigitalMountain);
+</script>
+
+<style>
+	.heygo-digital-mountain {
+		background: linear-gradient(135deg, #000000 0%, #0a0a0a 50%, #000000 100%);
+	}
+
+	#mountain-webgl-canvas,
+	#lightning-overlay-canvas {
+		display: block;
+	}
+
+	/* HUD styling */
+	.heygo-digital-mountain .absolute {
+		font-family: 'Monaco', 'Menlo', monospace;
+	}
+
+	/* Glowing effect for indicators */
+	.heygo-digital-mountain .animate-pulse {
+		box-shadow: 0 0 10px #00E0FF;
+	}
+</style> 
