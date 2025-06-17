@@ -124,7 +124,7 @@
 				color: 0x00E0FF,
 				wireframe: true,
 				transparent: true,
-				opacity: 0.3
+				opacity: 0
 			});
 
 			const mountain = new THREE.Mesh(mountainGeometry, mountainMaterial);
@@ -193,57 +193,117 @@
 			const start = this.lightningStart;
 			const end = this.lightningEnd;
 			
-			// Create ski trail lightning path
-			const steps = 25;
-			const points = [];
+			// Create ski trail path with animated progression
+			const steps = 50;
+			const totalPoints = [];
 			const noise2D = createNoise2D();
 			
+			// Generate the complete trail path
 			for (let i = 0; i <= steps; i++) {
 				const t = i / steps;
 				const x = start.x + (end.x - start.x) * t;
 				const y = start.y + (end.y - start.y) * t;
 				
 				// Add some noise for natural ski trail variation
-				const noiseOffset = noise2D(t * 2, this.time * 0.1) * 40 * Math.sin(Math.PI * t);
-				const offsetX = Math.sin(Math.atan2(end.y - start.y, end.x - start.x) + Math.PI/2) * noiseOffset;
-				const offsetY = Math.cos(Math.atan2(end.y - start.y, end.x - start.x) + Math.PI/2) * noiseOffset;
+                const curveOffset = Math.sin(t * Math.PI * 2) * 20 * Math.sin(Math.PI * t);
+				const offsetX = Math.sin(Math.atan2(end.y - start.y, end.x - start.x) + Math.PI/2) * curveOffset;
+				const offsetY = Math.cos(Math.atan2(end.y - start.y, end.x - start.x) + Math.PI/2) * curveOffset;
 				
-				points.push({
+				totalPoints.push({
 					x: x + offsetX,
 					y: y + offsetY
 				});
 			}
 			
-			// Draw the main ski trail
+			// Calculate animation progress (0 to 1, then back to 0)
+			const cycleTime = 4.0; // 4 seconds for complete cycle
+			const progress = (this.time % cycleTime) / cycleTime;
+			
+			// Create easing for smoother animation
+			const easedProgress = this.easeInOutCubic(progress);
+			
+			// Calculate how many points to draw based on progress
+			const pointsToDraw = Math.floor(easedProgress * totalPoints.length);
+			
+			if (pointsToDraw < 2) return; // Need at least 2 points to draw
+			
+			// Draw the animated ski trail
 			ctx.save();
-			ctx.strokeStyle = '#00E0FF';
-			ctx.lineWidth = 1;
-			ctx.shadowBlur = 15;
-			ctx.shadowColor = '#00E0FF';
 			ctx.globalCompositeOperation = 'lighter';
 			
-			ctx.beginPath();
-			ctx.moveTo(points[0].x, points[0].y);
-			for (let i = 1; i < points.length; i++) {
-				ctx.lineTo(points[i].x, points[i].y);
+			// Draw multiple trail segments with fading effect
+			for (let trailIndex = 0; trailIndex < 3; trailIndex++) {
+				const trailOffset = trailIndex * 5;
+				const trailProgress = Math.max(0, pointsToDraw - trailOffset);
+				
+				if (trailProgress < 2) continue;
+				
+				// Main trail with glow
+				ctx.strokeStyle = '#00E0FF';
+				ctx.lineWidth = 2 - trailIndex * 0.3;
+				ctx.shadowBlur = 15 - trailIndex * 3;
+				ctx.shadowColor = '#00E0FF';
+				ctx.globalAlpha = 1 - trailIndex * 0.3;
+				
+				ctx.beginPath();
+				ctx.moveTo(totalPoints[0].x, totalPoints[0].y);
+				for (let i = 1; i < trailProgress; i++) {
+					ctx.lineTo(totalPoints[i].x, totalPoints[i].y);
+				}
+				ctx.stroke();
+				
+				// Inner white trail
+				ctx.strokeStyle = '#FFFFFF';
+				ctx.lineWidth = 0.8 - trailIndex * 0.2;
+				ctx.shadowBlur = 5;
+				ctx.shadowColor = '#FFFFFF';
+				ctx.globalAlpha = 0.8 - trailIndex * 0.2;
+				
+				ctx.beginPath();
+				ctx.moveTo(totalPoints[0].x, totalPoints[0].y);
+				for (let i = 1; i < trailProgress; i++) {
+					ctx.lineTo(totalPoints[i].x, totalPoints[i].y);
+				}
+				ctx.stroke();
 			}
-			ctx.stroke();
-			
-			// Draw thinner inner trail
-			ctx.strokeStyle = '#FFFFFF';
-			ctx.lineWidth = 1;
-			ctx.shadowBlur = 5;
-			ctx.beginPath();
-			ctx.moveTo(points[0].x, points[0].y);
-			for (let i = 1; i < points.length; i++) {
-				ctx.lineTo(points[i].x, points[i].y);
-			}
-			ctx.stroke();
 			
 			ctx.restore();
 			
-			// Draw trail markers
-			this.drawTrailMarkers(ctx, points);
+			// Draw moving skier dot
+			if (pointsToDraw > 1) {
+				this.drawSkierPosition(ctx, totalPoints[pointsToDraw - 1]);
+			}
+			
+			// Draw trail markers (always visible)
+			this.drawTrailMarkers(ctx, totalPoints);
+		}
+		
+		easeInOutCubic(t) {
+			return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+		}
+		
+		drawSkierPosition(ctx, position) {
+			ctx.save();
+			ctx.fillStyle = '#00E0FF';
+			ctx.shadowBlur = 20;
+			ctx.shadowColor = '#00E0FF';
+			ctx.globalCompositeOperation = 'lighter';
+			
+			// Animated skier position
+			const pulseScale = 1 + Math.sin(this.time * 10) * 0.3;
+			const radius = 6 * pulseScale;
+			
+			ctx.beginPath();
+			ctx.arc(position.x, position.y, radius, 0, Math.PI * 2);
+			ctx.fill();
+			
+			// Add motion trail for skier
+			ctx.fillStyle = 'rgba(0, 224, 255, 0.3)';
+			ctx.beginPath();
+			ctx.arc(position.x, position.y, radius * 2, 0, Math.PI * 2);
+			ctx.fill();
+			
+			ctx.restore();
 		}
 
 		drawTrailMarkers(ctx, points) {
@@ -269,7 +329,7 @@
 		animate() {
 			requestAnimationFrame(this.animate.bind(this));
 			
-			this.time += 0.1;
+			this.time += 0.016;
 
 		
 
@@ -286,20 +346,30 @@
 
 		updateHUD() {
 			setInterval(() => {
-				// Update HUD values
+				// Update HUD values with skiing animation cycle
 				const altitudeElement = document.getElementById('altitude-value');
 				const gradientElement = document.getElementById('gradient-value');
 				
+				// Calculate progress through the ski run
+				const cycleTime = 4.0;
+				const progress = (this.time % cycleTime) / cycleTime;
+				
 				if (altitudeElement) {
-					const altitude = (2800 + Math.random() * 100).toFixed(0);
-					altitudeElement.textContent = altitude;
+					// Altitude decreases as skier goes down the mountain
+					const baseAltitude = 2840;
+					const altitudeDrop = 200;
+					const currentAltitude = baseAltitude - (altitudeDrop * progress);
+					altitudeElement.textContent = Math.round(currentAltitude).toString();
 				}
 				
 				if (gradientElement) {
-					const gradient = (25 + Math.random() * 15).toFixed(0);
-					gradientElement.textContent = gradient;
+					// Gradient varies along the slope
+					const baseGradient = 25;
+					const gradientVariation = 15 * Math.sin(progress * Math.PI * 2);
+					const currentGradient = baseGradient + gradientVariation;
+					gradientElement.textContent = Math.round(Math.abs(currentGradient)).toString();
 				}
-			}, 150);
+			}, 100);
 		}
 
 		onWindowResize() {
