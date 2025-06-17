@@ -8,7 +8,7 @@ import { getRelativeLocaleUrl } from "astro:i18n";
 
 // components
 import Button from "@components/Button/Button.astro";
-import LightningAnimation from "@components/Canvas/LightningAnimation.astro";
+import HeyGoDigitalMountain from "@components/Canvas/HeyGoDigitalMountain.astro";
 
 // utils
 import { getLocaleFromUrl } from "@js/localeUtils";
@@ -34,47 +34,70 @@ const t = useTranslations(currLocale);
 				data-aos-duration="1"
 			>
 				<div class="mx-auto -my-10 max-w-[250px] md:my-0 md:ml-0 md:max-w-[520px]">
-					<LightningAnimation />
+					<!-- HeyGo WebGL Hero with futuristic snowboarding effects -->
+					      <!-- Placeholder for HeyGo Sensor & Snowboarding scenario
+						  <div class="bg-zinc-700/60 rounded-[50px] h-[469px] w-full flex items-center justify-center">
+							<div class="text-center text-white">
+								<div class="text-3xl font-semibold mb-4">HeyGo Sensor</div>
+								<div class="text-3xl font-semibold">&</div>
+								<div class="text-3xl font-semibold">Snowboarding scenario</div>
+							</div> -->
+
+					<div class="rounded-[50px] h-[469px] w-full overflow-hidden">
+						<HeyGoDigitalMountain />
+					</div>
 				</div>
 			</div>
 
 			<div class="mx-auto my-auto w-full pt-4 pb-10 md:ml-0 md:max-w-[560px] md:pt-10 lg:pr-10">
+				<!-- Blue accent bar -->
+				<div 
+					class="w-[134px] h-[20px] bg-[#00E0FF] mb-12"
+					data-aos="fade-up"
+					data-aos-trigger="#hero-electric"
+				></div>
+				
 				<div
-					class="mx-auto max-w-[400px] md:ml-0"
+					class="mx-auto max-w-[527px] md:ml-0"
 					data-aos="fade-up"
 					data-aos-trigger="#hero-electric"
 				>
 					<h1
-						class="main-text-gradient mb-6 text-5xl leading-tight font-medium tracking-tight text-pretty md:text-6xl md:leading-tight"
+						class="text-white mb-6 text-[56px] leading-[1.36] font-semibold tracking-tight text-pretty md:leading-[1.36]"
 					>
-						{t("hero_text")}
+						HeyGo
 					</h1>
+					<h2 class="text-white text-[32px] leading-[1.36] font-medium mb-4">
+						Your AI Snowboarding Coach, 
+						Effortless Ride Made Easy
+					</h2>
+					
 				</div>
 				<p
-					class="description mb-8 text-pretty lg:text-lg"
+					class="text-white mb-8 text-base leading-[1.36] text-pretty lg:text-base max-w-[464px]"
 					data-aos="fade-up"
 					data-aos-delay=".1"
 					data-aos-trigger="#hero-electric"
 				>
-					{t("hero_description")}
+					HeyGo gives snowboarders the real-time insights and precision feedback once only available to pros.
 				</p>
 				<div
-					class="mt-6 flex flex-wrap justify-center gap-4 md:justify-start"
+					class="mt-6 flex flex-wrap justify-start gap-4"
 					data-aos="fade-up"
 					data-aos-delay=".2"
 					data-aos-trigger="#hero-electric"
 				>
-					<Button variant="primary" href={getRelativeLocaleUrl(currLocale, "/signup")}>
-						Get Started
-					</Button>
-					<Button
-						variant="ghost"
-						arrow="right"
-						href="https://cosmicthemes.com/themes/amplify/"
-						target="_blank"
-						rel="noopener noreferrer"
+					<Button 
+						variant="secondary" 
+						class="bg-white/90 text-black hover:bg-white rounded-full px-9 py-4 text-2xl font-semibold flex items-center gap-3"
+						href={getRelativeLocaleUrl(currLocale, "/contact")}
 					>
-						Get Amplify
+						Contact us
+						<Icon 
+							name="arrow-right"
+							class="mr-1.5 -ml-1 size-3 opacity-70"
+							aria-hidden="true"
+						/>
 					</Button>
 				</div>
 			</div>

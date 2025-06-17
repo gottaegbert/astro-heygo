@@ -1,0 +1,378 @@
+---
+/**
+ * * HeyGo WebGL Hero - Futuristic Snowboarding Experience
+ * Features: Snow particles, data streams, snowboarder silhouette, HUD elements
+ */
+---
+
+<div class="heygo-webgl-hero relative w-full h-full">
+	<canvas id="heygo-webgl-canvas" class="w-full h-full"></canvas>
+	
+	<!-- HUD Overlay -->
+	<div class="absolute inset-0 pointer-events-none">
+		<!-- Speed indicator -->
+		<div class="absolute top-8 left-8 text-[#00E0FF] font-mono">
+			<div class="text-sm opacity-70">SPEED</div>
+			<div class="text-2xl font-bold">
+				<span id="speed-value">42.3</span> <span class="text-sm">km/h</span>
+			</div>
+		</div>
+		
+		<!-- Angle indicator -->
+		<div class="absolute top-8 right-8 text-[#00E0FF] font-mono">
+			<div class="text-sm opacity-70">EDGE ANGLE</div>
+			<div class="text-2xl font-bold">
+				<span id="angle-value">15.2</span><span class="text-sm">°</span>
+			</div>
+		</div>
+		
+		<!-- Data streams indicator -->
+		<div class="absolute bottom-8 left-8 text-[#00E0FF] font-mono">
+			<div class="text-xs opacity-70">DATA STREAMS</div>
+			<div class="flex gap-2 mt-1">
+				<div class="w-2 h-2 bg-[#00E0FF] rounded-full animate-pulse"></div>
+				<div class="w-2 h-2 bg-[#00E0FF] rounded-full animate-pulse" style="animation-delay: 0.2s"></div>
+				<div class="w-2 h-2 bg-[#00E0FF] rounded-full animate-pulse" style="animation-delay: 0.4s"></div>
+			</div>
+		</div>
+		
+		<!-- Performance metrics -->
+		<div class="absolute bottom-8 right-8 text-[#00E0FF] font-mono text-xs">
+			<div class="opacity-70">PERFORMANCE</div>
+			<div class="mt-1">
+				<div>BALANCE: <span class="text-white">98%</span></div>
+				<div>CONTROL: <span class="text-white">94%</span></div>
+				<div>EFFICIENCY: <span class="text-white">87%</span></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	import * as THREE from 'three';
+
+	class HeyGoWebGLHero {
+		constructor() {
+			this.canvas = document.getElementById('heygo-webgl-canvas');
+			this.scene = new THREE.Scene();
+			this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+			this.renderer = new THREE.WebGLRenderer({ 
+				canvas: this.canvas, 
+				antialias: true, 
+				alpha: true 
+			});
+			
+			this.particles = [];
+			this.dataLines = [];
+			this.snowboarder = null;
+			this.time = 0;
+			
+			this.init();
+		}
+
+		init() {
+			// Setup renderer
+			this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
+			this.renderer.setClearColor(0x000000, 0);
+			this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+			// Setup camera
+			this.camera.position.z = 5;
+
+			// Create scene elements
+			this.createMountainBackground();
+			this.createSnowParticles();
+			this.createDataStreams();
+			this.createSnowboarder();
+			this.createMotionTrails();
+
+			// Add lighting
+			const ambientLight = new THREE.AmbientLight(0x404040, 0.3);
+			this.scene.add(ambientLight);
+
+			const directionalLight = new THREE.DirectionalLight(0x00E0FF, 0.8);
+			directionalLight.position.set(5, 5, 5);
+			this.scene.add(directionalLight);
+
+			// Start animation
+			this.animate();
+			this.updateHUD();
+
+			// Handle resize
+			window.addEventListener('resize', this.onWindowResize.bind(this));
+		}
+
+		createMountainBackground() {
+			// Create mountain silhouettes
+			const mountainGeometry = new THREE.PlaneGeometry(20, 6);
+			const mountainMaterial = new THREE.MeshBasicMaterial({ 
+				color: 0x1a1a1a, 
+				transparent: true, 
+				opacity: 0.6 
+			});
+			
+			for (let i = 0; i < 3; i++) {
+				const mountain = new THREE.Mesh(mountainGeometry, mountainMaterial);
+				mountain.position.set((i - 1) * 8, -2, -8 - i * 2);
+				mountain.scale.y = 0.5 + i * 0.3;
+				this.scene.add(mountain);
+			}
+		}
+
+		createSnowParticles() {
+			const particleCount = 1000;
+			const positions = new Float32Array(particleCount * 3);
+			const velocities = new Float32Array(particleCount * 3);
+
+			for (let i = 0; i < particleCount; i++) {
+				positions[i * 3] = (Math.random() - 0.5) * 20;
+				positions[i * 3 + 1] = Math.random() * 10;
+				positions[i * 3 + 2] = (Math.random() - 0.5) * 20;
+
+				velocities[i * 3] = (Math.random() - 0.5) * 0.02;
+				velocities[i * 3 + 1] = -Math.random() * 0.05 - 0.02;
+				velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.02;
+			}
+
+			const particleGeometry = new THREE.BufferGeometry();
+			particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+			particleGeometry.setAttribute('velocity', new THREE.BufferAttribute(velocities, 3));
+
+			const particleMaterial = new THREE.PointsMaterial({
+				color: 0xffffff,
+				size: 0.02,
+				transparent: true,
+				opacity: 0.6
+			});
+
+			this.snowParticles = new THREE.Points(particleGeometry, particleMaterial);
+			this.scene.add(this.snowParticles);
+		}
+
+		createDataStreams() {
+			// Create flowing data line particles
+			for (let i = 0; i < 50; i++) {
+				const geometry = new THREE.SphereGeometry(0.02, 8, 8);
+				const material = new THREE.MeshBasicMaterial({ 
+					color: 0x00E0FF,
+					transparent: true,
+					opacity: 0.8
+				});
+				
+				const particle = new THREE.Mesh(geometry, material);
+				particle.position.set(
+					(Math.random() - 0.5) * 10,
+					(Math.random() - 0.5) * 6,
+					(Math.random() - 0.5) * 10
+				);
+				
+				particle.userData = {
+					velocity: new THREE.Vector3(
+						(Math.random() - 0.5) * 0.05,
+						(Math.random() - 0.5) * 0.05,
+						Math.random() * 0.1
+					),
+					initialPos: particle.position.clone()
+				};
+				
+				this.dataLines.push(particle);
+				this.scene.add(particle);
+			}
+		}
+
+		createSnowboarder() {
+			// Create stylized snowboarder silhouette
+			const group = new THREE.Group();
+
+			// Body
+			const bodyGeometry = new THREE.CylinderGeometry(0.1, 0.15, 1.2, 8);
+			const bodyMaterial = new THREE.MeshBasicMaterial({ 
+				color: 0x333333,
+				transparent: true,
+				opacity: 0.8
+			});
+			const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+			body.rotation.z = Math.PI * 0.2;
+			group.add(body);
+
+			// Head
+			const headGeometry = new THREE.SphereGeometry(0.2, 8, 8);
+			const head = new THREE.Mesh(headGeometry, bodyMaterial);
+			head.position.set(-0.3, 0.8, 0);
+			group.add(head);
+
+			// Arms
+			const armGeometry = new THREE.CylinderGeometry(0.05, 0.05, 0.8, 6);
+			const leftArm = new THREE.Mesh(armGeometry, bodyMaterial);
+			leftArm.position.set(-0.6, 0.3, 0);
+			leftArm.rotation.z = Math.PI * 0.4;
+			group.add(leftArm);
+
+			const rightArm = new THREE.Mesh(armGeometry, bodyMaterial);
+			rightArm.position.set(0.2, 0.1, 0);
+			rightArm.rotation.z = -Math.PI * 0.3;
+			group.add(rightArm);
+
+			// Snowboard
+			const boardGeometry = new THREE.BoxGeometry(0.3, 0.05, 2);
+			const boardMaterial = new THREE.MeshBasicMaterial({ 
+				color: 0x00E0FF,
+				transparent: true,
+				opacity: 0.9
+			});
+			const board = new THREE.Mesh(boardGeometry, boardMaterial);
+			board.position.set(0.3, -0.8, 0);
+			board.rotation.z = Math.PI * 0.1;
+			group.add(board);
+
+			group.position.set(-1, 0, 1);
+			group.scale.set(0.8, 0.8, 0.8);
+
+			this.snowboarder = group;
+			this.scene.add(group);
+		}
+
+		createMotionTrails() {
+			// Create motion trail effect
+			const trailGeometry = new THREE.BufferGeometry();
+			const trailPositions = [];
+			
+			for (let i = 0; i < 20; i++) {
+				trailPositions.push(-1 - i * 0.2, 0, 1 + i * 0.1);
+			}
+			
+			trailGeometry.setAttribute('position', new THREE.Float32BufferAttribute(trailPositions, 3));
+			
+			const trailMaterial = new THREE.LineBasicMaterial({
+				color: 0x00E0FF,
+				transparent: true,
+				opacity: 0.4
+			});
+			
+			const trail = new THREE.Line(trailGeometry, trailMaterial);
+			this.scene.add(trail);
+		}
+
+		animate() {
+			requestAnimationFrame(this.animate.bind(this));
+			
+			this.time += 0.016;
+
+			// Animate snow particles
+			if (this.snowParticles) {
+				const positions = this.snowParticles.geometry.attributes.position.array;
+				const velocities = this.snowParticles.geometry.attributes.velocity.array;
+
+				for (let i = 0; i < positions.length; i += 3) {
+					positions[i] += velocities[i];
+					positions[i + 1] += velocities[i + 1];
+					positions[i + 2] += velocities[i + 2];
+
+					// Reset particles that fall too low
+					if (positions[i + 1] < -5) {
+						positions[i + 1] = 5;
+						positions[i] = (Math.random() - 0.5) * 20;
+						positions[i + 2] = (Math.random() - 0.5) * 20;
+					}
+				}
+				this.snowParticles.geometry.attributes.position.needsUpdate = true;
+			}
+
+			// Animate data streams
+			this.dataLines.forEach((particle, index) => {
+				particle.position.add(particle.userData.velocity);
+				
+				// Add some wave motion
+				particle.position.y += Math.sin(this.time * 2 + index) * 0.01;
+				
+				// Reset if too far
+				if (particle.position.z > 5) {
+					particle.position.copy(particle.userData.initialPos);
+				}
+				
+				// Pulse effect
+				const scale = 1 + Math.sin(this.time * 4 + index) * 0.3;
+				particle.scale.setScalar(scale);
+			});
+
+			// Animate snowboarder
+			if (this.snowboarder) {
+				this.snowboarder.rotation.y = Math.sin(this.time * 0.5) * 0.1;
+				this.snowboarder.position.y = Math.sin(this.time * 2) * 0.1;
+			}
+
+			// Camera movement
+			this.camera.position.x = Math.sin(this.time * 0.2) * 0.5;
+			this.camera.position.y = Math.cos(this.time * 0.3) * 0.3;
+			this.camera.lookAt(0, 0, 0);
+
+			this.renderer.render(this.scene, this.camera);
+		}
+
+		updateHUD() {
+			setInterval(() => {
+				// Update HUD values with random realistic data
+				const speedElement = document.getElementById('speed-value');
+				const angleElement = document.getElementById('angle-value');
+				
+				if (speedElement) {
+					const speed = (35 + Math.random() * 20).toFixed(1);
+					speedElement.textContent = speed;
+				}
+				
+				if (angleElement) {
+					const angle = (10 + Math.random() * 15).toFixed(1);
+					angleElement.textContent = angle;
+				}
+			}, 100);
+		}
+
+		onWindowResize() {
+			const width = this.canvas.clientWidth;
+			const height = this.canvas.clientHeight;
+
+			this.camera.aspect = width / height;
+			this.camera.updateProjectionMatrix();
+			this.renderer.setSize(width, height);
+		}
+	}
+
+	// Initialize when DOM is loaded
+	function initHeyGoWebGL() {
+		const canvas = document.getElementById('heygo-webgl-canvas');
+		if (canvas && !canvas.dataset.initialized) {
+			new HeyGoWebGLHero();
+			canvas.dataset.initialized = 'true';
+		}
+	}
+
+	// Run on initial load
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', initHeyGoWebGL);
+	} else {
+		initHeyGoWebGL();
+	}
+
+	// Run on view transitions
+	document.addEventListener('astro:after-swap', initHeyGoWebGL);
+</script>
+
+<style>
+	.heygo-webgl-hero {
+		background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
+	}
+
+	#heygo-webgl-canvas {
+		display: block;
+	}
+
+	/* HUD styling */
+	.heygo-webgl-hero .absolute {
+		font-family: 'Monaco', 'Menlo', monospace;
+	}
+
+	/* Glowing effect for data indicators */
+	.heygo-webgl-hero .animate-pulse {
+		box-shadow: 0 0 10px #00E0FF;
+	}
+</style> 

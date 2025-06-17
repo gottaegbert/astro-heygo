@@ -2,11 +2,11 @@ import { type SiteDataProps } from "../types/configDataTypes";
 
 // Update this file with your site specific information
 const siteData: SiteDataProps = {
-	name: "Amplify",
+	name: "HeyGo",
 	// Your website's title and description (meta fields)
-	title: "Amplify - an electric SaaS theme crafted with Astro and Tailwind CSS",
+	title: "HeyGo - Your AI Snowboarding Coach, Effortless Ride Made Easy",
 	description:
-		"Create an amazing website for your SaaS clients with our beautiful website theme designed using Astro and Tailwind CSS. Perfect for freelancers, developers, startups, and personal use.",
+		"HeyGo gives snowboarders the real-time insights and precision feedback once only available to pros.",
 
 	// used on contact page and footer
 	contact: {
@@ -18,9 +18,9 @@ const siteData: SiteDataProps = {
 
 	// Your information for blog post purposes
 	author: {
-		name: "Cosmic Themes",
-		email: "creator@cosmicthemes.com",
-		twitter: "Cosmic_Themes",
+		name: "HeyGo",
+		email: "creator@heygo.com",
+		twitter: "HeyGo",
 	},
 
 	// default image for meta tags if the page doesn't have an image already
