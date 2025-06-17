@@ -1,0 +1,1 @@
+globalThis.process??={},globalThis.process.env??={};import{N as NOOP_MIDDLEWARE_HEADER}from"./astro/server_8e5-x8mo.mjs";const NOOP_MIDDLEWARE_FN=async(s,e)=>{const r=await e();return r.headers.set(NOOP_MIDDLEWARE_HEADER,"true"),r};export{NOOP_MIDDLEWARE_FN as N};

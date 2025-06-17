@@ -1,0 +1,1 @@
+globalThis.process??={},globalThis.process.env??={};import"./chunks/astro-designed-error-pages_3x6ndnTZ.mjs";import"./chunks/astro/server_8e5-x8mo.mjs";import"./chunks/index_B7Oa2Wn_.mjs";import{s as sequence}from"./chunks/index_B3DfHxa8.mjs";const onRequest$1=(e,s)=>(e.isPrerendered&&(e.locals.runtime??={env:process.env}),s()),onRequest=sequence(onRequest$1);export{onRequest};

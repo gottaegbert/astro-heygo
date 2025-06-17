@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "include": [
+    "/_server-islands/*",
+    "/_image",
+    "/api/*",
+    "/keystatic/*"
+  ],
+  "exclude": [
+    "/",
+    "/_astro/*",
+    "/robots.txt",
+    "/favicons/*",
+    "/admin",
+    "/fr/*",
+    "/rss.xml",
+    "/404",
+    "/about",
+    "/blog/*",
+    "/categories/*",
+    "/contact",
+    "/examples/*",
+    "/login",
+    "/overview",
+    "/password-reset",
+    "/signup",
+    "/privacy-policy",
+    "/elements",
+    "/terms"
+  ]
+}
