@@ -33,6 +33,13 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
+      - name: Clean environment
+        run: |
+          rm -rf ${{ env.BUILD_PATH }}/node_modules
+          rm -f ${{ env.BUILD_PATH }}/package-lock.json
+          rm -f ${{ env.BUILD_PATH }}/yarn.lock
+          rm -f ${{ env.BUILD_PATH }}/pnpm-lock.yaml
+          rm -f ${{ env.BUILD_PATH }}/bun.lockb
       - name: Checkout
         uses: actions/checkout@v4
       - name: Detect package manager
