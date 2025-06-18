@@ -21,9 +21,11 @@ export default config({
 	// cloud deployment is free to sign up (up to 3 users per team)
 	// docs: https://keystatic.com/docs/cloud
 	// create a Keystatic Cloud account here: https://keystatic.cloud/
-	cloud: { project: "cosmic-themes/amplify" },
+	  cloud: {
+		project: 'heygo/astro-heygo',
+	  },
 	ui: {
-		brand: { name: "Cosmic Themes" },
+		brand: { name: "heygo" },
 	},
 	collections: {
 		blogEN: Collections.Blog("en"),
