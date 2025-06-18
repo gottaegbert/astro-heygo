@@ -33,9 +33,6 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - name: Clean environment
-        run: |
-          rm -rf ${{ env.BUILD_PATH }}/node_modules
       - name: Checkout
         uses: actions/checkout@v4
       - name: Detect package manager
