@@ -57,10 +57,13 @@ export default defineConfig({
 			assetsInlineLimit: 0,
 		},
 		optimizeDeps: {
-			exclude: ['lightningcss']
+			exclude: ['lightningcss', '@tailwindcss/vite']
 		},
 		ssr: {
-			noExternal: ['lightningcss']
+			external: ['lightningcss']
+		},
+		define: {
+			'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production')
 		}
 	},
 });
