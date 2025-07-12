@@ -1,6 +1,6 @@
 ---
 /**
- * * Simple contact form to get you started
+ * * Enhanced HeyGo contact form with data collection
  *
  * See https://cosmicthemes.com/docs/contact-form/ for more information on how to set up a contact form
  *
@@ -12,21 +12,42 @@ import Button from "@components/Button/Button.astro";
 ---
 
 <section id="contact" class="ml-auto max-w-2xl min-w-fit md:max-w-md">
-	<form id="contact-form" name="contact" class="flex flex-col gap-4">
-		<input type="hidden" name="form-name" value="contact" />
-		<div>
-			<div class="flex flex-col">
-				<label for="contact-fname" class="form__label sr-only">Full Name</label>
+	<div class="mb-6">
+		<h3 class="text-2xl font-semibold mb-3">Get Early Access to HeyGo</h3>
+		<p class="text-gray-600 dark:text-gray-400">
+			Join thousands of riders revolutionizing their snowboarding experience with AI-powered coaching.
+		</p>
+	</div>
+	
+	<form id="contact-form" name="heygo-contact" class="flex flex-col gap-4">
+		<input type="hidden" name="form-name" value="heygo-contact" />
+		
+		<!-- Basic Information -->
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+			<div>
+				<label for="contact-fname" class="form__label sr-only">First Name</label>
 				<input
 					type="text"
 					class="form__input"
 					name="fname"
 					id="contact-fname"
-					placeholder="first name"
+					placeholder="First name"
+					required
+				/>
+			</div>
+			<div>
+				<label for="contact-lname" class="form__label sr-only">Last Name</label>
+				<input
+					type="text"
+					class="form__input"
+					name="lname"
+					id="contact-lname"
+					placeholder="Last name"
 					required
 				/>
 			</div>
 		</div>
+		
 		<div>
 			<label for="contact-email" class="form__label sr-only mb-1">Email Address</label>
 			<input
@@ -35,32 +56,150 @@ import Button from "@components/Button/Button.astro";
 				name="email"
 				id="contact-email"
 				inputmode="email"
-				placeholder="preferred contact email"
+				placeholder="Email address"
 				required
 			/>
 		</div>
+		
 		<div>
-			<label for="contact-phone" class="form__label sr-only mb-1">Phone Number</label>
+			<label for="contact-wechat" class="form__label sr-only mb-1">WeChat</label>
 			<input
-				type="tel"
+				type="text"
 				class="form__input"
-				name="phone"
-				id="contact-phone"
-				inputmode="tel"
-				placeholder="phone number"
-				required
+				name="wechat"
+				id="contact-wechat"
+				placeholder="WeChat ID (optional)"
 			/>
 		</div>
+		
+		<!-- Snowboarding Experience -->
 		<div>
-			<label for="contact-services" class="form__label sr-only mb-1">Message</label>
-			<textarea
-				name="services"
+			<label for="riding-level" class="form__label mb-2 block text-sm font-medium">
+				What's your snowboarding level?
+			</label>
+			<select
+				name="riding-level"
+				id="riding-level"
 				class="form__input"
-				id="contact-services"
-				rows="4"
-				placeholder="Reason for contacting us"
+				required
+			>
+				<option value="">Select your level</option>
+				<option value="beginner">Beginner - Just started learning</option>
+				<option value="intermediate">Intermediate - Comfortable on most runs</option>
+				<option value="advanced">Advanced - Skilled on all terrains</option>
+				<option value="expert">Expert - Teaching/competing level</option>
+			</select>
+		</div>
+		
+		<!-- Equipment Preference -->
+		<div>
+			<label for="equipment-type" class="form__label mb-2 block text-sm font-medium">
+				Preferred equipment
+			</label>
+			<select
+				name="equipment-type"
+				id="equipment-type"
+				class="form__input"
+				required
+			>
+				<option value="">Select equipment type</option>
+				<option value="snowboard">Snowboard</option>
+				<option value="ski">Ski</option>
+				<option value="both">Both</option>
+			</select>
+		</div>
+		
+		<!-- Features Interest -->
+		<div>
+			<label class="form__label mb-2 block text-sm font-medium">
+				Which features interest you most? (Select all that apply)
+			</label>
+			<div class="grid grid-cols-1 gap-2">
+				<label class="flex items-center gap-2">
+					<input type="checkbox" name="features" value="ai-coaching" class="rounded">
+					<span class="text-sm">AI Voice Coaching</span>
+				</label>
+				<label class="flex items-center gap-2">
+					<input type="checkbox" name="features" value="video-analysis" class="rounded">
+					<span class="text-sm">Video Analysis</span>
+				</label>
+				<label class="flex items-center gap-2">
+					<input type="checkbox" name="features" value="performance-tracking" class="rounded">
+					<span class="text-sm">Performance Tracking</span>
+				</label>
+				<label class="flex items-center gap-2">
+					<input type="checkbox" name="features" value="social-features" class="rounded">
+					<span class="text-sm">Social Features</span>
+				</label>
+			</div>
+		</div>
+		
+		<!-- AI Coach Expectation -->
+		<div>
+			<label for="ai-expectation" class="form__label mb-2 block text-sm font-medium">
+				How excited are you about AI voice coaching? (1-10)
+			</label>
+			<input
+				type="range"
+				name="ai-expectation"
+				id="ai-expectation"
+				min="1"
+				max="10"
+				value="5"
+				class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+			/>
+			<div class="flex justify-between text-xs text-gray-500 mt-1">
+				<span>1 - Not interested</span>
+				<span>10 - Very excited</span>
+			</div>
+		</div>
+		
+		<!-- Current Hardware -->
+		<div>
+			<label for="current-hardware" class="form__label sr-only mb-1">Current Hardware</label>
+			<input
+				type="text"
+				class="form__input"
+				name="current-hardware"
+				id="current-hardware"
+				placeholder="What devices/apps do you currently use? (optional)"
+			/>
+		</div>
+		
+		<!-- Pain Points -->
+		<div>
+			<label for="pain-points" class="form__label sr-only mb-1">Current Challenges</label>
+			<textarea
+				name="pain-points"
+				class="form__input"
+				id="pain-points"
+				rows="3"
+				placeholder="What are your biggest snowboarding challenges or pain points?"
 				required></textarea>
 		</div>
-		<Button variant="primary" type="submit" class="rounded-md before:rounded-md">Submit</Button>
+		
+		<!-- Interest Type -->
+		<div>
+			<label for="interest-type" class="form__label mb-2 block text-sm font-medium">
+				I'm interested as a...
+			</label>
+			<select
+				name="interest-type"
+				id="interest-type"
+				class="form__input"
+				required
+			>
+				<option value="">Select your interest</option>
+				<option value="user">Potential User</option>
+				<option value="beta-tester">Beta Tester</option>
+				<option value="investor">Investor</option>
+				<option value="partner">Potential Partner</option>
+				<option value="team-member">Team Member</option>
+			</select>
+		</div>
+		
+		<Button variant="primary" type="submit" class="rounded-md before:rounded-md bg-[#00E0FF] hover:bg-[#00E0FF]/90 text-black font-semibold">
+			Get Early Access
+		</Button>
 	</form>
 </section>

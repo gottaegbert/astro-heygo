@@ -1,7 +1,6 @@
 ---
 /**
- * * About page with various sections including some text, team profiles, and CTA
- * Edit the team member information inside src/config/teamData.json.ts
+ * * About page for HeyGo - targeting users, team members, investors, and partners
  */
 import { Icon } from "astro-icon/components";
 import { getRelativeLocaleUrl } from "astro:i18n";
@@ -24,26 +23,172 @@ const currLocale = getLocaleFromUrl(Astro.url);
 const teamData = getTranslatedData("teamData", currLocale);
 ---
 
-<BaseLayout title="About Us" description="All about our super awesome small business team!">
-	<!-- text section -->
-	<section class="site-container mx-auto mt-16 py-20">
-		<div class="mb-16">
-			<Badge>the best around</Badge>
-			<h1 class="h1">Meet our team</h1>
-			<p class="description text-lg md:text-xl">
-				Lorem ipsum dolor sit amet consectetur adipisicing elit. Dicta voluptate molestias fugit.
-			</p>
-		</div>
-
-		<!-- Team info -->
-		<div class="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-			{
-				teamData.map((member) => (
-					<Profile name={member.name} title={member.title} image={member.image} bio={member.bio} />
-				))
-			}
+<BaseLayout title="About HeyGo" description="Revolutionizing snowboarding with AI-powered coaching from the future of 2030">
+	<!-- Hero section -->
+	<section class="dark bg-dark-bg py-20 mt-14">
+		<div class="site-container mx-auto px-4">
+			<div class="max-w-4xl mx-auto text-center">
+				<div class="w-[134px] h-[20px] bg-[#00E0FF] mb-8 mx-auto"></div>
+				<h1 class="text-white text-[56px] leading-[1.2] font-semibold mb-8">
+					The Future of Snowboarding is Here
+				</h1>
+				<p class="text-white text-xl leading-[1.5] mb-12 max-w-3xl mx-auto">
+					Standing at the vantage point of 2030, we're building the AI-powered snowboarding coach that transforms how riders learn, improve, and experience the mountain. HeyGo isn't just technology – it's your personal pathway to mastery.
+				</p>
+			</div>
 		</div>
 	</section>
 
-	<CtaCenter />
+	<!-- Vision section -->
+	<section class="py-20">
+		<div class="site-container mx-auto px-4">
+			<div class="max-w-6xl mx-auto">
+				<div class="grid md:grid-cols-2 gap-16 items-center">
+					<div>
+						<h2 class="text-[40px] leading-[1.3] font-semibold mb-6">
+							Our Vision
+						</h2>
+						<p class="text-lg leading-[1.6] mb-6">
+							We envision a world where every snowboarder has access to personalized, AI-powered coaching that adapts to their unique style, goals, and learning pace. Through real-time data analysis and video feedback, we're democratizing expertise that was once exclusive to professional athletes.
+						</p>
+						<p class="text-lg leading-[1.6]">
+							By 2030, HeyGo will have empowered millions of riders to unlock their potential, pushing the boundaries of what's possible on the mountain.
+						</p>
+					</div>
+					<div class="bg-[#F8F9FA] dark:bg-[#2C2C2C] rounded-[50px] p-8 h-[300px] flex items-center justify-center">
+						<div class="text-center">
+							<div class="text-[#00E0FF] text-4xl font-bold mb-4">2030</div>
+							<div class="text-gray-600 dark:text-gray-300 text-lg">The future we're building</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Technology section -->
+	<section class="dark bg-dark-bg py-20">
+		<div class="site-container mx-auto px-4">
+			<div class="max-w-6xl mx-auto">
+				<div class="text-center mb-16">
+					<h2 class="text-white text-[40px] leading-[1.3] font-semibold mb-6">
+						Revolutionary Technology
+					</h2>
+					<p class="text-white text-lg leading-[1.6] max-w-3xl mx-auto">
+						Our AI combines computer vision, motion tracking, and machine learning to provide unprecedented insights into snowboarding performance.
+					</p>
+				</div>
+				
+				<div class="grid md:grid-cols-3 gap-8">
+					<div class="text-center">
+						<div class="w-16 h-16 bg-[#00E0FF] rounded-full flex items-center justify-center mx-auto mb-6">
+							<Icon name="tabler/brain" class="w-8 h-8 text-black" />
+						</div>
+						<h3 class="text-white text-xl font-semibold mb-4">AI-Powered Analysis</h3>
+						<p class="text-white text-base leading-[1.6]">
+							Advanced machine learning algorithms analyze thousands of data points to provide personalized coaching recommendations.
+						</p>
+					</div>
+					<div class="text-center">
+						<div class="w-16 h-16 bg-[#00E0FF] rounded-full flex items-center justify-center mx-auto mb-6">
+							<Icon name="tabler/video" class="w-8 h-8 text-black" />
+						</div>
+						<h3 class="text-white text-xl font-semibold mb-4">Real-Time Video Processing</h3>
+						<p class="text-white text-base leading-[1.6]">
+							Computer vision technology processes video feeds in real-time to track posture, balance, and technique.
+						</p>
+					</div>
+					<div class="text-center">
+						<div class="w-16 h-16 bg-[#00E0FF] rounded-full flex items-center justify-center mx-auto mb-6">
+							<Icon name="tabler/device-mobile" class="w-8 h-8 text-black" />
+						</div>
+						<h3 class="text-white text-xl font-semibold mb-4">Motion Sensor Integration</h3>
+						<p class="text-white text-base leading-[1.6]">
+							Precision sensors capture every movement, providing detailed metrics on speed, rotation, and balance.
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Target Audiences section -->
+	<section class="py-20">
+		<div class="site-container mx-auto px-4">
+			<div class="max-w-6xl mx-auto">
+				<div class="text-center mb-16">
+					<h2 class="text-[40px] leading-[1.3] font-semibold mb-6">
+						Who We Serve
+					</h2>
+					<p class="text-lg leading-[1.6] max-w-3xl mx-auto">
+						HeyGo is built for everyone who shares our passion for snowboarding and believes in the power of technology to enhance human potential.
+					</p>
+				</div>
+				
+				<div class="grid md:grid-cols-2 gap-8">
+					<div class="bg-[#F8F9FA] dark:bg-[#2C2C2C] rounded-[30px] p-8">
+						<div class="w-12 h-12 bg-[#00E0FF] rounded-full flex items-center justify-center mb-6">
+							<Icon name="tabler/mountain" class="w-6 h-6 text-black" />
+						</div>
+						<h3 class="text-xl font-semibold mb-4">For Riders</h3>
+						<p class="text-base leading-[1.6] mb-4">
+							Whether you're a beginner taking your first turns or an expert pushing your limits, HeyGo adapts to your skill level and goals.
+						</p>
+						<ul class="text-sm space-y-2">
+							<li>• Personalized coaching recommendations</li>
+							<li>• Progress tracking and analytics</li>
+							<li>• Community features and challenges</li>
+							<li>• Safety monitoring and alerts</li>
+						</ul>
+					</div>
+					
+					<div class="bg-[#F8F9FA] dark:bg-[#2C2C2C] rounded-[30px] p-8">
+						<div class="w-12 h-12 bg-[#00E0FF] rounded-full flex items-center justify-center mb-6">
+							<Icon name="tabler/briefcase" class="w-6 h-6 text-black" />
+						</div>
+						<h3 class="text-xl font-semibold mb-4">For Partners</h3>
+						<p class="text-base leading-[1.6] mb-4">
+							Join us in revolutionizing the snowboarding industry through strategic partnerships, investment, or collaboration.
+						</p>
+						<ul class="text-sm space-y-2">
+							<li>• Investment opportunities in growing market</li>
+							<li>• Partnership with ski resorts and brands</li>
+							<li>• Career opportunities in cutting-edge tech</li>
+							<li>• Industry leadership in AI sports coaching</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Call to Action -->
+	<section class="dark bg-dark-bg py-20">
+		<div class="site-container mx-auto px-4">
+			<div class="max-w-4xl mx-auto text-center">
+				<h2 class="text-white text-[40px] leading-[1.3] font-semibold mb-8">
+					Ready to Shape the Future of Snowboarding?
+				</h2>
+				<p class="text-white text-lg leading-[1.6] mb-12 max-w-2xl mx-auto">
+					Whether you're a rider, investor, partner, or potential team member, we invite you to join our journey.
+				</p>
+				<div class="flex flex-col sm:flex-row gap-4 justify-center">
+					<Button 
+						variant="primary" 
+						href={getRelativeLocaleUrl(currLocale, "/contact")}
+						class="bg-[#00E0FF] hover:bg-[#00E0FF]/90 text-black font-semibold px-8 py-4 rounded-full"
+					>
+						Get Early Access
+					</Button>
+					<Button 
+						variant="secondary" 
+						href={getRelativeLocaleUrl(currLocale, "/investors")}
+						class="border-[#00E0FF] text-[#00E0FF] hover:bg-[#00E0FF]/10 font-semibold px-8 py-4 rounded-full"
+					>
+						Learn About Investment
+					</Button>
+				</div>
+			</div>
+		</div>
+	</section>
 </BaseLayout>

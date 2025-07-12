@@ -4,22 +4,83 @@
  */
 ---
 
-<section class="dark bg-dark-bg py-16">
+<section class="dark bg-dark-bg py-20">
 	<div class="site-container mx-auto px-4">
 		<div class="flex flex-col md:flex-row items-center gap-16 max-w-6xl mx-auto">
-			<!-- Image Placeholder -->
-			<div class="w-full md:w-[560px] h-[560px] bg-[#2C2C2C] rounded-[50px] flex-shrink-0">
-				<!-- Placeholder for AI Coach visual -->
-			</div>
-
 			<!-- Content Section -->
-			<div class="flex flex-col gap-3 max-w-[512px] pt-0 md:pt-20">
-				<h2 class="text-white text-[40px] leading-[1.36] font-semibold">
+			<div class="flex flex-col gap-6 max-w-[560px] pt-0 md:pt-20">
+				<div class="w-[134px] h-[20px] bg-[#00E0FF] mb-4"></div>
+				<h2 class="text-white text-[48px] leading-[1.2] font-semibold">
 					Meet Your AI Snowboarding Coach
 				</h2>
-				<p class="text-white text-base leading-[1.36] font-medium">
-					Our AI provides real-time coaching prompts and post-run analysis tailored to your level, goals, and riding style.
+				<p class="text-white text-lg leading-[1.5] mb-8">
+					Experience personalized coaching that adapts to your unique riding style. Our AI analyzes your technique in real-time, providing instant feedback and tailored guidance to accelerate your progress on the mountain.
 				</p>
+
+				<!-- Key Features -->
+				<div class="flex flex-col gap-4">
+					<div class="flex items-center gap-3">
+						<div class="w-2 h-2 bg-[#00E0FF] rounded-full"></div>
+						<span class="text-white text-base">Real-time voice coaching during rides</span>
+					</div>
+					<div class="flex items-center gap-3">
+						<div class="w-2 h-2 bg-[#00E0FF] rounded-full"></div>
+						<span class="text-white text-base">Personalized training plans and goals</span>
+					</div>
+					<div class="flex items-center gap-3">
+						<div class="w-2 h-2 bg-[#00E0FF] rounded-full"></div>
+						<span class="text-white text-base">Post-run analysis and improvement tips</span>
+					</div>
+					<div class="flex items-center gap-3">
+						<div class="w-2 h-2 bg-[#00E0FF] rounded-full"></div>
+						<span class="text-white text-base">Adaptive difficulty and technique progression</span>
+					</div>
+				</div>
+			</div>
+
+			<!-- AI Coach Visual -->
+			<div class="w-full md:w-[560px] h-[560px] bg-[#2C2C2C] rounded-[50px] flex-shrink-0 flex items-center justify-center relative overflow-hidden">
+				<div class="text-center">
+					<div class="text-white text-2xl font-semibold mb-8">AI Coach Interface</div>
+					
+					<!-- Mock AI Coach Interface -->
+					<div class="space-y-6 max-w-[300px]">
+						<!-- Voice coaching prompt -->
+						<div class="bg-[#00E0FF]/20 rounded-2xl p-4 text-left">
+							<div class="text-[#00E0FF] text-xs font-medium mb-2">AI COACH</div>
+							<div class="text-white text-sm">
+								"Great balance on that turn! Try shifting your weight slightly earlier for smoother transitions."
+							</div>
+						</div>
+						
+						<!-- Skill assessment -->
+						<div class="bg-[#1A1A1A] rounded-2xl p-4">
+							<div class="text-[#00E0FF] text-xs font-medium mb-3">SKILL ASSESSMENT</div>
+							<div class="space-y-2">
+								<div class="flex justify-between text-xs">
+									<span class="text-gray-400">Carving</span>
+									<span class="text-white">Advanced</span>
+								</div>
+								<div class="flex justify-between text-xs">
+									<span class="text-gray-400">Jumps</span>
+									<span class="text-white">Intermediate</span>
+								</div>
+								<div class="flex justify-between text-xs">
+									<span class="text-gray-400">Rails</span>
+									<span class="text-white">Beginner</span>
+								</div>
+							</div>
+						</div>
+						
+						<!-- Training recommendation -->
+						<div class="bg-[#00E0FF]/10 rounded-2xl p-4 text-left">
+							<div class="text-[#00E0FF] text-xs font-medium mb-2">NEXT CHALLENGE</div>
+							<div class="text-white text-sm">
+								Focus on rail slides - you're ready for the next level!
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

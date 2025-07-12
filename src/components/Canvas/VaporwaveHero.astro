@@ -1,0 +1,281 @@
+---
+/**
+ * * Exact Linear Vaporwave Three.js effect with Astro optimized assets
+ */
+
+// Import the texture images using Astro's asset handling with @images alias
+import gridTexture from "@images/grid-6.png";
+import displacementTexture from "@images/displacement-7.png";
+import metalnessTexture from "@images/metalness-2.png";
+
+interface Props {
+  enabled?: boolean;
+}
+
+const { enabled = false } = Astro.props;
+---
+
+{enabled && (
+  <div id="vaporwave-container" class="absolute inset-0 w-full h-full">
+    <canvas id="vaporwave-canvas" class="webgl w-full h-full"></canvas>
+  </div>
+)}
+
+<script>
+  import * as THREE from 'three';
+  import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+  import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+  import { GammaCorrectionShader } from 'three/examples/jsm/shaders/GammaCorrectionShader.js';
+  import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
+  import { RGBShiftShader } from 'three/examples/jsm/shaders/RGBShiftShader.js';
+  import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
+
+  // Import the texture images
+  import gridTexture from "@images/grid-6.png";
+  import displacementTexture from "@images/displacement-7.png";  
+  import metalnessTexture from "@images/metalness-2.png";
+
+  // Initialize the exact same vaporwave effect with optimized assets
+  function initVaporwave() {
+    const canvas = document.querySelector("canvas.webgl");
+    
+    if (!canvas) {
+      console.log('Canvas not found or vaporwave effect disabled');
+      return;
+    }
+
+    // Scene
+    const scene = new THREE.Scene();
+
+    // Fog
+    const fog = new THREE.Fog("#000000", 1, 2.5);
+    scene.fog = fog;
+
+    // Textures - using Astro optimized assets
+    const textureLoader = new THREE.TextureLoader();
+    
+    // Load the actual texture files (Astro-optimized)
+    console.log('Loading textures:', { gridTexture, displacementTexture, metalnessTexture });
+    
+    const gridTex = textureLoader.load(gridTexture.src);
+    const heightTexture = textureLoader.load(displacementTexture.src);
+    const metalnessTex = textureLoader.load(metalnessTexture.src);
+
+    // Plane with exact same parameters
+    const parameters = {
+      displacementScale: 0.4,
+      metalness: 1,
+      roughness: 0.5,
+    };
+
+    const geometry = new THREE.PlaneGeometry(1, 2, 24, 24);
+    const material = new THREE.MeshStandardMaterial({
+      map: gridTex,
+      displacementMap: heightTexture,
+      displacementScale: parameters.displacementScale,
+      metalness: parameters.metalness,
+      metalnessMap: metalnessTex,
+      roughness: parameters.roughness,
+    });
+
+    const plane = new THREE.Mesh(geometry, material);
+    const plane2 = new THREE.Mesh(geometry, material);
+
+    plane.rotation.x = -Math.PI * 0.5;
+    plane2.rotation.x = -Math.PI * 0.5;
+
+    plane.position.y = 0.0;
+    plane.position.z = 0.15;
+    plane2.position.y = 0.0;
+    plane2.position.z = -1.85;
+    scene.add(plane);
+    scene.add(plane2);
+
+    // Lights - 蓝色风格
+    const ambientLight = new THREE.AmbientLight("#ffffff", 10);
+    scene.add(ambientLight);
+
+    const spotlight = new THREE.SpotLight(
+      "#0099ff",
+      40,
+      25,
+      Math.PI * 0.1,
+      0.25
+    );
+    spotlight.position.set(0.5, 0.75, 2.1);
+    spotlight.target.position.x = -0.25;
+    spotlight.target.position.y = 0.25;
+    spotlight.target.position.z = 0.25;
+    scene.add(spotlight);
+    scene.add(spotlight.target);
+
+    const spotlight2 = new THREE.SpotLight(
+      "#00e0ff",
+      40,
+      25,
+      Math.PI * 0.1,
+      0.25
+    );
+    spotlight2.position.set(-0.5, 0.75, 2.1);
+    spotlight2.target.position.x = 0.25;
+    spotlight2.target.position.y = 0.25;
+    spotlight2.target.position.z = 0.25;
+    scene.add(spotlight2);
+    scene.add(spotlight2.target);
+
+    // Sizes
+    const sizes = {
+      width: window.innerWidth,
+      height: window.innerHeight,
+    };
+
+    // Camera with continuous movement
+    const camera = new THREE.PerspectiveCamera(
+      75,
+      sizes.width / sizes.height,
+      0.01,
+      20
+    );
+    
+    // Start camera further back for entrance animation
+    camera.position.x = 0;
+    camera.position.y = 0.06;
+    camera.position.z = 3.5; // Start further back
+    scene.add(camera);
+
+    // Final camera position
+    const finalCameraPosition = {
+      x: 0,
+      y: 0.06,
+      z: 1.1
+    };
+
+    // Renderer
+    const renderer = new THREE.WebGLRenderer({
+      canvas: canvas,
+      alpha: true, // Enable transparency
+    });
+    renderer.setSize(sizes.width, sizes.height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setClearColor(0x000000, 0); // Transparent background
+
+    // Post-processing - exact same effects
+    const effectComposer = new EffectComposer(renderer);
+    effectComposer.setSize(sizes.width, sizes.height);
+    effectComposer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    const renderPass = new RenderPass(scene, camera);
+    effectComposer.addPass(renderPass);
+
+    const rgbShiftPass = new ShaderPass(RGBShiftShader);
+    rgbShiftPass.uniforms["amount"].value = 0.001;
+    effectComposer.addPass(rgbShiftPass);
+
+    const gammaCorrectionPass = new ShaderPass(GammaCorrectionShader);
+    effectComposer.addPass(gammaCorrectionPass);
+
+    const bloomPass = new UnrealBloomPass(
+      new THREE.Vector2(sizes.width, sizes.height),
+      0.9,
+      0.9,
+      0.85
+    );
+    effectComposer.addPass(bloomPass);
+
+    // Resize handler
+    const handleResize = () => {
+      sizes.width = window.innerWidth;
+      sizes.height = window.innerHeight;
+
+      camera.aspect = sizes.width / sizes.height;
+      camera.updateProjectionMatrix();
+
+      renderer.setSize(sizes.width, sizes.height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      effectComposer.setSize(sizes.width, sizes.height);
+      effectComposer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Animation with continuous camera movement
+    const clock = new THREE.Clock();
+    let animationId;
+    const entranceDuration = 2.5; // 2.5 seconds for entrance animation
+
+    const tick = () => {
+      const elapsedTime = clock.getElapsedTime();
+
+      // Entrance animation - camera accelerates forward
+      if (elapsedTime < entranceDuration) {
+        const progress = elapsedTime / entranceDuration;
+        // Ease out cubic for acceleration effect
+        const easeOutCubic = 1 - Math.pow(1 - progress, 3);
+        
+        camera.position.z = 3.5 + (finalCameraPosition.z - 3.5) * easeOutCubic;
+      } else {
+        // Continuous subtle camera movement after entrance
+        const continuousTime = elapsedTime - entranceDuration;
+        camera.position.z = finalCameraPosition.z + Math.sin(continuousTime * 0.3) * 0.1;
+        camera.position.y = finalCameraPosition.y + Math.cos(continuousTime * 0.2) * 0.02;
+        camera.position.x = Math.sin(continuousTime * 0.15) * 0.05;
+      }
+
+      // Update plane position (continuous from start)
+      plane.position.z = (elapsedTime * 0.15) % 2 + 0.15;
+      plane2.position.z = ((elapsedTime * 0.15) % 2) - 2 + 0.15;
+
+      // Render
+      effectComposer.render();
+
+      // Call tick again on the next frame
+      animationId = window.requestAnimationFrame(tick);
+    };
+
+    tick();
+
+    console.log('Vaporwave effect initialized successfully with continuous camera movement and blue style');
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+      }
+      renderer.dispose();
+      effectComposer.dispose();
+    };
+  }
+
+  // Initialize
+  let cleanup;
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      cleanup = initVaporwave();
+    });
+  } else {
+    cleanup = initVaporwave();
+  }
+
+  window.addEventListener('beforeunload', () => {
+    if (cleanup) cleanup();
+  });
+</script>
+
+<style>
+  #vaporwave-container {
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .webgl {
+    position: fixed;
+    top: 0;
+    left: 0;
+    outline: none;
+    mix-blend-mode: screen;
+    opacity: 0.4; /* 更透明，让底图可见 */
+  }
+</style> 

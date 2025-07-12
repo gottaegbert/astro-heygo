@@ -7,6 +7,7 @@ import HeroSideElectric from "@components/Hero/HeroSideElectric.astro";
 
 // New HeyGo feature components
 import FeatureDataVisualization from "@components/Feature/FeatureDataVisualization.astro";
+import FeatureVideoAnalysis from "@components/Feature/FeatureVideoAnalysis.astro";
 import FeatureAICoach from "@components/Feature/FeatureAICoach.astro";
 import FeatureTrainTogether from "@components/Feature/FeatureTrainTogether.astro";
 import FeatureSensors from "@components/Feature/FeatureSensors.astro";
@@ -24,9 +25,10 @@ const siteData = getTranslatedData("siteData", currLocale);
 ---
 
 <BaseLayout title={siteData.title} description={siteData.description}>
-	<HeroSideElectric />
+	<HeroSideElectric enableVaporwave={true} />
 	
 	<FeatureDataVisualization />
+	<FeatureVideoAnalysis />
 	<FeatureAICoach />
 	<FeatureTrainTogether />
 	<FeatureSensors />

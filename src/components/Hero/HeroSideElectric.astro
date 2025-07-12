@@ -9,89 +9,93 @@ import { getRelativeLocaleUrl } from "astro:i18n";
 // components
 import Button from "@components/Button/Button.astro";
 import HeyGoDigitalMountain from "@components/Canvas/HeyGoDigitalMountain.astro";
+import VaporwaveHero from "@components/Canvas/VaporwaveHero.astro";
 
 // utils
 import { getLocaleFromUrl } from "@js/localeUtils";
 import { useTranslations } from "@js/translationUtils";
 
-import heroImage from "@images/storm-2.webp";
+import heroImage from "@images/hero.jpeg";
 
+interface Props {
+  enableVaporwave?: boolean;
+}
+
+const { enableVaporwave = false } = Astro.props;
 const currLocale = getLocaleFromUrl(Astro.url);
 const t = useTranslations(currLocale);
 ---
 
 <!-- "dark" class forces dark mode for this section -->
-<section id="hero-electric" class="dark bg-dark-bg mt-14 overflow-x-clip">
-	<div class="site-container mx-auto px-4 pb-10 md:pt-10">
-		<div
-			class="mx-auto grid max-w-md text-center md:max-w-5xl md:grid-cols-2 md:text-left xl:items-center"
-		>
-			<div
-				class="h-full w-full flex-grow md:order-2"
-				data-aos="fade-in"
-				data-aos-trigger="#hero-electric"
-				data-aos-delay="1"
-				data-aos-duration="1"
-			>
-				<div class="mx-auto -my-10 max-w-[250px] md:my-0 md:ml-0 md:max-w-[520px]">
-					<!-- HeyGo WebGL Hero with futuristic snowboarding effects -->
-					      <!-- Placeholder for HeyGo Sensor & Snowboarding scenario
-						  <div class="bg-zinc-700/60 rounded-[50px] h-[469px] w-full flex items-center justify-center">
-							<div class="text-center text-white">
-								<div class="text-3xl font-semibold mb-4">HeyGo Sensor</div>
-								<div class="text-3xl font-semibold">&</div>
-								<div class="text-3xl font-semibold">Snowboarding scenario</div>
-							</div> -->
+<section id="hero-electric" class="dark mt-14 overflow-x-clip relative min-h-screen">
+	<!-- Background Image -->
+	<div class="absolute inset-0 w-full h-full">
+		<Image
+			src={heroImage}
+			alt="Snowboarder carving down pristine mountain slopes"
+			class="w-full h-full object-cover"
+			loading="eager"
+			width={1920}
+			height={1080}
+		/>
+		<!-- Gradient overlay for text readability -->
+		<div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent"></div>
+		<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30"></div>
+	</div>
+	
+	<!-- Vaporwave Three.js Effect - only enabled when specified -->
+	<VaporwaveHero enabled={enableVaporwave} />
+	
+	<div class="site-container mx-auto px-4 pb-16 pt-20 md:pt-32 relative z-20">
 
-					<div class="rounded-[50px] h-[469px] w-full overflow-hidden">
-						<HeyGoDigitalMountain />
-					</div>
-				</div>
-			</div>
-
-			<div class="mx-auto my-auto w-full pt-4 pb-10 md:ml-0 md:max-w-[560px] md:pt-10 lg:pr-10">
-				<!-- Blue accent bar -->
-				<div 
-					class="w-[134px] h-[20px] bg-[#00E0FF] mb-12"
-					data-aos="fade-up"
-					data-aos-trigger="#hero-electric"
-				></div>
+		
+		
+		<div class="mx-auto my-auto w-full pt-4 pb-10  md:max-w-[560px] md:pt-10 lg:pr-10">
+				
+									<!-- <div class=" h-[469px] w-full bg-transparent overflow-hidden">
+										<HeyGoDigitalMountain />
+									</div> -->
+			
 				
 				<div
 					class="mx-auto max-w-[527px] md:ml-0"
 					data-aos="fade-up"
 					data-aos-trigger="#hero-electric"
 				>
-					<h1
-						class="text-white mb-6 text-[56px] leading-[1.36] font-semibold tracking-tight text-pretty md:leading-[1.36]"
-					>
-						HeyGo
-					</h1>
-					<h2 class="text-white text-[32px] leading-[1.36] font-medium mb-4">
-						Your AI Snowboarding Coach, 
-						Effortless Ride Made Easy
-					</h2>
+									<h1
+					class="text-white mb-6 text-[56px] leading-[1.36] font-semibold tracking-tight text-pretty md:leading-[1.36]"
+					style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);"
+				>
+					HeyGo
+				</h1>
+				<h2 class="text-white text-[32px] leading-[1.36] font-medium mb-4"
+					style="text-shadow: 1px 1px 3px rgba(0,0,0,0.8);"
+				>
+					Your AI Snowboarding Coach, 
+					Effortless Ride Made Easy
+				</h2>
 					
 				</div>
-				<p
-					class="text-white mb-8 text-base leading-[1.36] text-pretty lg:text-base max-w-[464px]"
-					data-aos="fade-up"
-					data-aos-delay=".1"
-					data-aos-trigger="#hero-electric"
-				>
-					HeyGo gives snowboarders the real-time insights and precision feedback once only available to pros.
-				</p>
+							<p
+				class="text-white mb-8 text-base leading-[1.36] text-pretty lg:text-base max-w-[464px]"
+				data-aos="fade-up"
+				data-aos-delay=".1"
+				data-aos-trigger="#hero-electric"
+				style="text-shadow: 1px 1px 2px rgba(0,0,0,0.8);"
+			>
+				HeyGo gives snowboarders the real-time insights and precision feedback once only available to pros.
+			</p>
 				<div
 					class="mt-6 flex flex-wrap justify-start gap-4"
 					data-aos="fade-up"
 					data-aos-delay=".2"
 					data-aos-trigger="#hero-electric"
 				>
-					<Button 
-						variant="secondary" 
-						class="bg-white/90 text-black hover:bg-white rounded-full px-9 py-4 text-2xl font-semibold flex items-center gap-3"
-						href={getRelativeLocaleUrl(currLocale, "/contact")}
-					>
+									<Button 
+					variant="secondary" 
+					class="bg-white/95 text-black hover:bg-white rounded-full px-9 py-4 text-2xl font-semibold flex items-center gap-3 backdrop-blur-sm shadow-lg border border-white/20"
+					href={getRelativeLocaleUrl(currLocale, "/contact")}
+				>
 						Contact us
 						<Icon 
 							name="arrow-right"

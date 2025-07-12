@@ -54,6 +54,7 @@
 	import { createNoise2D } from 'simplex-noise';
 
 	class HeyGoDigitalMountain {
+[x: string]: any;
 		constructor() {
 			this.webglCanvas = document.getElementById('mountain-webgl-canvas');
 			this.lightningCanvas = document.getElementById('lightning-overlay-canvas');
@@ -412,7 +413,7 @@
 
 <style>
 	.heygo-digital-mountain {
-		background: linear-gradient(135deg, #000000 0%, #0a0a0a 50%, #000000 100%);
+		background: transparent;
 	}
 
 	#mountain-webgl-canvas,

@@ -13,122 +13,65 @@ import { type navItem } from "../types/configDataTypes";
 // note: 1 level of dropdown is supported
 const navConfig: navItem[] = [
 	{
-		text: "Overview",
-		link: "/overview",
-	},
-
-	// mega menu
-	{
-		text: "Pages",
+		text: "Features",
 		megaMenuColumns: [
 			{
-				title: "Landing Pages",
+				title: "AI Technology",
 				items: [
 					{
-						text: "Landing 1",
-						link: "/",
-						icon: "tabler/star",
+						text: "Real-time Coaching",
+						link: "/features/ai-coaching",
+						icon: "tabler/brain",
 					},
 					{
-						text: "Landing 2",
-						link: "/examples/landing2",
-						icon: "tabler/diamonds",
+						text: "Video Analysis",
+						link: "/features/video-analysis",
+						icon: "tabler/video",
 					},
 					{
-						text: "Landing 3",
-						link: "/examples/landing3",
-						icon: "tabler/circle",
+						text: "Performance Tracking",
+						link: "/features/performance-tracking",
+						icon: "tabler/chart-line",
 					},
 				],
 			},
 			{
-				title: "Blog",
+				title: "Data Insights",
 				items: [
 					{
-						text: "Blog Post 1",
-						link: "/blog/tsconfig-paths-setup",
-						icon: "tabler/edit-circle",
+						text: "Motion Sensors",
+						link: "/features/motion-sensors",
+						icon: "tabler/device-mobile",
 					},
 					{
-						text: "Blog Post 2",
-						link: "/examples/blog-post-2",
-						icon: "tabler/edit-circle",
+						text: "Analytics Dashboard",
+						link: "/features/analytics",
+						icon: "tabler/dashboard",
 					},
 					{
-						text: "Categories",
-						link: "/categories",
-						icon: "tabler/category",
-					},
-					{
-						text: "Blog Index 1",
-						link: "/blog",
-						icon: "tabler/pencil",
-					},
-					{
-						text: "Blog Index 2",
-						link: "/examples/blog-index-2",
-						icon: "tabler/pencil",
+						text: "Progress Reports",
+						link: "/features/progress-reports",
+						icon: "tabler/report",
 					},
 				],
 			},
 			{
-				title: "Elements and Forms",
+				title: "Community",
 				items: [
 					{
-						text: "MDX Pages",
-						link: "/elements",
-						icon: "tabler/wand",
+						text: "Train Together",
+						link: "/features/train-together",
+						icon: "tabler/users",
 					},
 					{
-						text: "Contact",
-						link: "/contact",
-						icon: "tabler/address-book",
+						text: "Leaderboards",
+						link: "/features/leaderboards",
+						icon: "tabler/trophy",
 					},
 					{
-						text: "Login",
-						link: "/login",
-						icon: "tabler/login",
-					},
-					{
-						text: "Signup",
-						link: "/signup",
-						icon: "tabler/user",
-					},
-					{
-						text: "Password Reset",
-						link: "/password-reset",
-						icon: "tabler/password",
-					},
-				],
-			},
-			{
-				title: "Other Pages",
-				items: [
-					{
-						text: "About",
-						link: "/about",
-						icon: "tabler/user",
-					},
-					{
-						text: "Privacy Policy",
-						link: "/privacy-policy",
-						icon: "tabler/lock-square",
-					},
-					{
-						text: "Terms of Use",
-						link: "/terms",
-						icon: "tabler/script",
-					},
-					{
-						text: "Page not found",
-						link: "/not-a-link",
-						icon: "tabler/error-404",
-					},
-					{
-						text: "RSS Feed",
-						link: "/rss.xml",
-						newTab: true,
-						icon: "tabler/rss",
+						text: "Challenges",
+						link: "/features/challenges",
+						icon: "tabler/target",
 					},
 				],
 			},
@@ -136,8 +79,59 @@ const navConfig: navItem[] = [
 	},
 
 	{
+		text: "About",
+		link: "/about",
+	},
+
+	{
 		text: "Blog",
 		link: "/blog",
+	},
+
+	{
+		text: "Join Us",
+		megaMenuColumns: [
+			{
+				title: "For Riders",
+				items: [
+					{
+						text: "Get Early Access",
+						link: "/signup",
+						icon: "tabler/mountain",
+					},
+					{
+						text: "Become a Beta Tester",
+						link: "/beta-program",
+						icon: "tabler/test-pipe",
+					},
+				],
+			},
+			{
+				title: "For Partners",
+				items: [
+					{
+						text: "Investor Relations",
+						link: "/investors",
+						icon: "tabler/chart-arrows",
+					},
+					{
+						text: "Careers",
+						link: "/careers",
+						icon: "tabler/briefcase",
+					},
+					{
+						text: "Partnership",
+						link: "/partnership",
+						icon: "tabler/hand-love-you",
+					},
+				],
+			},
+		],
+	},
+
+	{
+		text: "Contact",
+		link: "/contact",
 	},
 ];
 
