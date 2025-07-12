@@ -3,279 +3,556 @@
  * * Exact Linear Vaporwave Three.js effect with Astro optimized assets
  */
 
-// Import the texture images using Astro's asset handling with @images alias
-import gridTexture from "@images/grid-6.png";
-import displacementTexture from "@images/displacement-7.png";
-import metalnessTexture from "@images/metalness-2.png";
-
 interface Props {
-  enabled?: boolean;
+	enabled?: boolean;
 }
 
 const { enabled = false } = Astro.props;
 ---
 
-{enabled && (
-  <div id="vaporwave-container" class="absolute inset-0 w-full h-full">
-    <canvas id="vaporwave-canvas" class="webgl w-full h-full"></canvas>
-  </div>
-)}
+{
+	enabled && (
+		<div id="vaporwave-container" class="absolute inset-0 h-full w-full">
+			<canvas id="vaporwave-canvas" class="webgl h-full w-full" />
+		</div>
+	)
+}
 
 <script>
-  import * as THREE from 'three';
-  import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
-  import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
-  import { GammaCorrectionShader } from 'three/examples/jsm/shaders/GammaCorrectionShader.js';
-  import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
-  import { RGBShiftShader } from 'three/examples/jsm/shaders/RGBShiftShader.js';
-  import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
+	import * as THREE from "three";
+	import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
+	import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
+	import { GammaCorrectionShader } from "three/examples/jsm/shaders/GammaCorrectionShader.js";
+	import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
+	import { RGBShiftShader } from "three/examples/jsm/shaders/RGBShiftShader.js";
+	import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
+	import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
-  // Import the texture images
-  import gridTexture from "@images/grid-6.png";
-  import displacementTexture from "@images/displacement-7.png";  
-  import metalnessTexture from "@images/metalness-2.png";
+	// Import the texture images
+	import gridTexture from "@images/grid.png";
+	import displacementTexture from "@images/displacement-7.png";
+	import metalnessTexture from "@images/metalness-22.png";
 
-  // Initialize the exact same vaporwave effect with optimized assets
-  function initVaporwave() {
-    const canvas = document.querySelector("canvas.webgl");
-    
-    if (!canvas) {
-      console.log('Canvas not found or vaporwave effect disabled');
-      return;
-    }
+	// Initialize the exact same vaporwave effect with optimized assets
+	function initVaporwave() {
+		const canvas = document.querySelector("canvas.webgl");
 
-    // Scene
-    const scene = new THREE.Scene();
+		if (!canvas) {
+			console.log("Canvas not found or vaporwave effect disabled");
+			return;
+		}
 
-    // Fog
-    const fog = new THREE.Fog("#000000", 1, 2.5);
-    scene.fog = fog;
+		// Scene
+		const scene = new THREE.Scene();
 
-    // Textures - using Astro optimized assets
-    const textureLoader = new THREE.TextureLoader();
-    
-    // Load the actual texture files (Astro-optimized)
-    console.log('Loading textures:', { gridTexture, displacementTexture, metalnessTexture });
-    
-    const gridTex = textureLoader.load(gridTexture.src);
-    const heightTexture = textureLoader.load(displacementTexture.src);
-    const metalnessTex = textureLoader.load(metalnessTexture.src);
+		// Fog
+		const fog = new THREE.Fog("#000000", 1, 2.5);
+		scene.fog = fog;
 
-    // Plane with exact same parameters
-    const parameters = {
-      displacementScale: 0.4,
-      metalness: 1,
-      roughness: 0.5,
-    };
+		// Textures - using Astro optimized assets
+		const textureLoader = new THREE.TextureLoader();
 
-    const geometry = new THREE.PlaneGeometry(1, 2, 24, 24);
-    const material = new THREE.MeshStandardMaterial({
-      map: gridTex,
-      displacementMap: heightTexture,
-      displacementScale: parameters.displacementScale,
-      metalness: parameters.metalness,
-      metalnessMap: metalnessTex,
-      roughness: parameters.roughness,
-    });
+		// Load the actual texture files (Astro-optimized)
+		console.log("Loading textures:", { gridTexture, displacementTexture, metalnessTexture });
 
-    const plane = new THREE.Mesh(geometry, material);
-    const plane2 = new THREE.Mesh(geometry, material);
+		const gridTex = textureLoader.load(gridTexture.src);
+		const heightTexture = textureLoader.load(displacementTexture.src);
+		const metalnessTex = textureLoader.load(metalnessTexture.src);
 
-    plane.rotation.x = -Math.PI * 0.5;
-    plane2.rotation.x = -Math.PI * 0.5;
+		// Plane with exact same parameters
+		const parameters = {
+			displacementScale: 0.4,
+			metalness: 1,
+			roughness: 0.5,
+		};
 
-    plane.position.y = 0.0;
-    plane.position.z = 0.15;
-    plane2.position.y = 0.0;
-    plane2.position.z = -1.85;
-    scene.add(plane);
-    scene.add(plane2);
+		const geometry = new THREE.PlaneGeometry(1, 2, 24, 24);
+		const material = new THREE.MeshStandardMaterial({
+			map: gridTex,
+			displacementMap: heightTexture,
+			displacementScale: parameters.displacementScale,
+			metalness: parameters.metalness,
+			metalnessMap: metalnessTex,
+			roughness: parameters.roughness,
+		});
 
-    // Lights - 蓝色风格
-    const ambientLight = new THREE.AmbientLight("#ffffff", 10);
-    scene.add(ambientLight);
+		const plane = new THREE.Mesh(geometry, material);
+		const plane2 = new THREE.Mesh(geometry, material);
 
-    const spotlight = new THREE.SpotLight(
-      "#0099ff",
-      40,
-      25,
-      Math.PI * 0.1,
-      0.25
-    );
-    spotlight.position.set(0.5, 0.75, 2.1);
-    spotlight.target.position.x = -0.25;
-    spotlight.target.position.y = 0.25;
-    spotlight.target.position.z = 0.25;
-    scene.add(spotlight);
-    scene.add(spotlight.target);
+		plane.rotation.x = -Math.PI * 0.5;
+		plane2.rotation.x = -Math.PI * 0.5;
 
-    const spotlight2 = new THREE.SpotLight(
-      "#00e0ff",
-      40,
-      25,
-      Math.PI * 0.1,
-      0.25
-    );
-    spotlight2.position.set(-0.5, 0.75, 2.1);
-    spotlight2.target.position.x = 0.25;
-    spotlight2.target.position.y = 0.25;
-    spotlight2.target.position.z = 0.25;
-    scene.add(spotlight2);
-    scene.add(spotlight2.target);
+		plane.position.y = 0.0;
+		plane.position.z = 0.15;
+		plane2.position.y = 0.0;
+		plane2.position.z = -1.85;
+		scene.add(plane);
+		scene.add(plane2);
 
-    // Sizes
-    const sizes = {
-      width: window.innerWidth,
-      height: window.innerHeight,
-    };
+		// Create camera trail - simplified approach with visible test objects
+		const trailPoints: THREE.Vector3[] = [];
+		const trailLength = 8; // More trail points for smoother S-curve
+		const trailSpheres: THREE.Mesh[] = []; // Array to store trail spheres
 
-    // Camera with continuous movement
-    const camera = new THREE.PerspectiveCamera(
-      75,
-      sizes.width / sizes.height,
-      0.01,
-      20
-    );
-    
-    // Start camera further back for entrance animation
-    camera.position.x = 0;
-    camera.position.y = 0.06;
-    camera.position.z = 3.5; // Start further back
-    scene.add(camera);
+		// Initialize trail points
+		for (let i = 0; i < trailLength; i++) {
+			trailPoints.push(new THREE.Vector3(0, 0.1, i * 0.15)); // Start above terrain with closer spacing
+		}
 
-    // Final camera position
-    const finalCameraPosition = {
-      x: 0,
-      y: 0.06,
-      z: 1.1
-    };
+		// Create trail using tiny line-like particles for S-curve effect
+		for (let i = 0; i < trailLength; i++) {
+			const geometry = new THREE.SphereGeometry(0.003 + i * 0.0001, 4, 4); // Very small spheres for line effect
+			const material = new THREE.MeshBasicMaterial({
+				color: 0x00ffff, // Bright cyan to blue gradient
+				opacity: 1.0 - i * 0.03, // Slower fade for better visibility
+			});
+			const sphere = new THREE.Mesh(geometry, material);
 
-    // Renderer
-    const renderer = new THREE.WebGLRenderer({
-      canvas: canvas,
-      alpha: true, // Enable transparency
-    });
-    renderer.setSize(sizes.width, sizes.height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setClearColor(0x000000, 0); // Transparent background
+			// Position spheres initially above terrain
+			sphere.position.set(0, 0.01, 0.3 + i * 0.15);
+			scene.add(sphere);
+			trailSpheres.push(sphere);
+		}
 
-    // Post-processing - exact same effects
-    const effectComposer = new EffectComposer(renderer);
-    effectComposer.setSize(sizes.width, sizes.height);
-    effectComposer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+		console.log("Trail spheres created:", trailSpheres.length);
 
-    const renderPass = new RenderPass(scene, camera);
-    effectComposer.addPass(renderPass);
+		// Load snowboard model
+		const loader = new GLTFLoader();
+		let snowboard: THREE.Group | null = null;
 
-    const rgbShiftPass = new ShaderPass(RGBShiftShader);
-    rgbShiftPass.uniforms["amount"].value = 0.001;
-    effectComposer.addPass(rgbShiftPass);
+		loader.load(
+			"/src/assets/snowboard.glb",
+			(gltf) => {
+				snowboard = gltf.scene;
 
-    const gammaCorrectionPass = new ShaderPass(GammaCorrectionShader);
-    effectComposer.addPass(gammaCorrectionPass);
+				// Scale and position the snowboard
+				snowboard.scale.set(0.1, 0.1, 0.1);
+				snowboard.position.set(0, 0.02, 0.35);
 
-    const bloomPass = new UnrealBloomPass(
-      new THREE.Vector2(sizes.width, sizes.height),
-      0.9,
-      0.9,
-      0.85
-    );
-    effectComposer.addPass(bloomPass);
+				// Rotate to align with movement direction
+				snowboard.rotation.y = Math.PI; // Face forward
+				snowboard.rotation.x = -0.1; // Slight tilt
 
-    // Resize handler
-    const handleResize = () => {
-      sizes.width = window.innerWidth;
-      sizes.height = window.innerHeight;
+				// Apply digital/neon material effect
+				snowboard.traverse((child) => {
+					if (child instanceof THREE.Mesh) {
+						child.material = new THREE.MeshStandardMaterial({
+							color: new THREE.Color(0x0099ee),
+							wireframe: false,
+							emissive: new THREE.Color(0x00ffff),
+							emissiveIntensity: 0.1,
+							metalness: 0.1,
+							roughness: 0.2,
+						});
+					}
+				});
 
-      camera.aspect = sizes.width / sizes.height;
-      camera.updateProjectionMatrix();
+				scene.add(snowboard);
+				console.log("Snowboard loaded and added to scene");
+			},
+			(progress) => {
+				console.log("Snowboard loading progress:", progress);
+			},
+			(error) => {
+				console.error("Error loading snowboard:", error);
+			},
+		);
 
-      renderer.setSize(sizes.width, sizes.height);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+		// Create snowfall particle system
+		const snowflakeCount = 400;
+		const snowflakeGeometry = new THREE.BufferGeometry();
+		const snowflakePositions = new Float32Array(snowflakeCount * 3);
+		const snowflakeVelocities = new Float32Array(snowflakeCount * 3);
 
-      effectComposer.setSize(sizes.width, sizes.height);
-      effectComposer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    };
+		// Initialize snowflake positions and velocities
+		for (let i = 0; i < snowflakeCount; i++) {
+			const i3 = i * 3;
 
-    window.addEventListener('resize', handleResize);
+			// Random positions in a box around the camera
+			snowflakePositions[i3] = (Math.random() - 0.5) * 4; // X
+			snowflakePositions[i3 + 1] = Math.random() * 3 + 0.5; // Y (above ground)
+			snowflakePositions[i3 + 2] = (Math.random() - 0.5) * 4; // Z
 
-    // Animation with continuous camera movement
-    const clock = new THREE.Clock();
-    let animationId;
-    const entranceDuration = 2.5; // 2.5 seconds for entrance animation
+			// Random velocities for natural snowfall
+			snowflakeVelocities[i3] = (Math.random() - 0.5) * 0.02; // X drift
+			snowflakeVelocities[i3 + 1] = -Math.random() * 0.05 - 0.01; // Y falling
+			snowflakeVelocities[i3 + 2] = (Math.random() - 0.5) * 0.02; // Z drift
+		}
 
-    const tick = () => {
-      const elapsedTime = clock.getElapsedTime();
+		snowflakeGeometry.setAttribute("position", new THREE.BufferAttribute(snowflakePositions, 3));
 
-      // Entrance animation - camera accelerates forward
-      if (elapsedTime < entranceDuration) {
-        const progress = elapsedTime / entranceDuration;
-        // Ease out cubic for acceleration effect
-        const easeOutCubic = 1 - Math.pow(1 - progress, 3);
-        
-        camera.position.z = 3.5 + (finalCameraPosition.z - 3.5) * easeOutCubic;
-      } else {
-        // Continuous subtle camera movement after entrance
-        const continuousTime = elapsedTime - entranceDuration;
-        camera.position.z = finalCameraPosition.z + Math.sin(continuousTime * 0.3) * 0.1;
-        camera.position.y = finalCameraPosition.y + Math.cos(continuousTime * 0.2) * 0.02;
-        camera.position.x = Math.sin(continuousTime * 0.15) * 0.05;
-      }
+		// Create snowflake material with subtle glow
+		const snowflakeMaterial = new THREE.PointsMaterial({
+			color: 0x00ffff,
+			size: 0.001,
+			transparent: true,
+			opacity: 0.9,
+			alphaTest: 0.1,
+			blending: THREE.AdditiveBlending,
+		});
 
-      // Update plane position (continuous from start)
-      plane.position.z = (elapsedTime * 0.15) % 2 + 0.15;
-      plane2.position.z = ((elapsedTime * 0.15) % 2) - 2 + 0.15;
+		const snowflakes = new THREE.Points(snowflakeGeometry, snowflakeMaterial);
+		scene.add(snowflakes);
 
-      // Render
-      effectComposer.render();
+		console.log("Snowfall system created with", snowflakeCount, "particles");
 
-      // Call tick again on the next frame
-      animationId = window.requestAnimationFrame(tick);
-    };
+		// Lights - blue style
+		const ambientLight = new THREE.AmbientLight("#ffffff", 10);
+		scene.add(ambientLight);
 
-    tick();
+		const spotlight = new THREE.SpotLight("#0099ff", 40, 25, Math.PI * 0.1, 0.25);
+		spotlight.position.set(0.5, 0.75, 2.1);
+		spotlight.target.position.x = -0.25;
+		spotlight.target.position.y = 0.25;
+		spotlight.target.position.z = 0.25;
+		scene.add(spotlight);
+		scene.add(spotlight.target);
 
-    console.log('Vaporwave effect initialized successfully with continuous camera movement and blue style');
+		const spotlight2 = new THREE.SpotLight("#00e0ff", 40, 25, Math.PI * 0.1, 0.25);
+		spotlight2.position.set(-0.5, 0.75, 2.1);
+		spotlight2.target.position.x = 0.25;
+		spotlight2.target.position.y = 0.25;
+		spotlight2.target.position.z = 0.25;
+		scene.add(spotlight2);
+		scene.add(spotlight2.target);
 
-    // Cleanup
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      if (animationId) {
-        cancelAnimationFrame(animationId);
-      }
-      renderer.dispose();
-      effectComposer.dispose();
-    };
-  }
+		// Sizes
+		const sizes = {
+			width: window.innerWidth,
+			height: window.innerHeight,
+		};
 
-  // Initialize
-  let cleanup;
-  
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-      cleanup = initVaporwave();
-    });
-  } else {
-    cleanup = initVaporwave();
-  }
+		// Camera with continuous movement
+		const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.01, 40);
 
-  window.addEventListener('beforeunload', () => {
-    if (cleanup) cleanup();
-  });
+		// Start camera further back for entrance animation
+		camera.position.x = 0;
+		camera.position.y = 0.06;
+		camera.position.z = 3.5; // Start further back
+		scene.add(camera);
+
+		// Final camera position
+		const finalCameraPosition = {
+			x: 0,
+			y: 0.06,
+			z: 1.1,
+		};
+
+		// Renderer
+		const renderer = new THREE.WebGLRenderer({
+			canvas: canvas,
+			alpha: true, // Enable transparency
+		});
+		renderer.setSize(sizes.width, sizes.height);
+		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+		// renderer.setClearColor(0x000000, 0.4); // Transparent background
+
+		// Post-processing - exact same effects
+		const effectComposer = new EffectComposer(renderer);
+		effectComposer.setSize(sizes.width, sizes.height);
+		effectComposer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+		const renderPass = new RenderPass(scene, camera);
+		effectComposer.addPass(renderPass);
+
+		const rgbShiftPass = new ShaderPass(RGBShiftShader);
+		rgbShiftPass.uniforms["amount"].value = 0.001;
+		effectComposer.addPass(rgbShiftPass);
+
+		const gammaCorrectionPass = new ShaderPass(GammaCorrectionShader);
+		effectComposer.addPass(gammaCorrectionPass);
+
+		const bloomPass = new UnrealBloomPass(
+			new THREE.Vector2(sizes.width, sizes.height),
+			0.9,
+			0.9,
+			0.85,
+		);
+		effectComposer.addPass(bloomPass);
+
+		// Mouse interaction variables for orbit-like control
+		const mouse = {
+			x: 0,
+			y: 0,
+			isPressed: false,
+			lastX: 0,
+			deltaX: 0,
+		};
+
+		let targetBloomStrength = 0.9;
+		let currentBloomStrength = 0.9;
+		let bloomTransitionSpeed = 4.0;
+
+		// Camera rotation control (orbit-like)
+		let cameraRotationTarget = 0;
+		let cameraRotationCurrent = 0;
+		let rotationDamping = 0.05; // 缓动系数
+
+		// Resize handler
+		const handleResize = () => {
+			sizes.width = window.innerWidth;
+			sizes.height = window.innerHeight;
+
+			camera.aspect = sizes.width / sizes.height;
+			camera.updateProjectionMatrix();
+
+			renderer.setSize(sizes.width, sizes.height);
+			renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+			effectComposer.setSize(sizes.width, sizes.height);
+			effectComposer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+		};
+
+		window.addEventListener("resize", handleResize);
+
+		// Mouse event handlers for orbit-like control
+		const handleMouseMove = (event) => {
+			if (mouse.isPressed) {
+				// Calculate delta movement when dragging
+				mouse.deltaX = event.clientX - mouse.lastX;
+				// Accumulate rotation target based on drag distance
+				cameraRotationTarget += mouse.deltaX * 0.002; // Sensitivity
+			}
+			mouse.lastX = event.clientX;
+		};
+
+		const handleMouseDown = (event) => {
+			mouse.isPressed = true;
+			mouse.lastX = event.clientX;
+
+			// Cycle through bloom strength values on click/drag start
+			if (Math.abs(targetBloomStrength - 0.9) < 0.1) {
+				targetBloomStrength = 1.8; // High intensity
+				console.log("Bloom intensity set to HIGH:", targetBloomStrength);
+			} else if (Math.abs(targetBloomStrength - 1.8) < 0.1) {
+				targetBloomStrength = 0.2; // Low intensity
+				console.log("Bloom intensity set to LOW:", targetBloomStrength);
+			} else {
+				targetBloomStrength = 0.9; // Default
+				console.log("Bloom intensity set to DEFAULT:", targetBloomStrength);
+			}
+		};
+
+		const handleMouseUp = (event) => {
+			mouse.isPressed = false;
+		};
+
+		// Add mouse event listeners
+		window.addEventListener("mousemove", handleMouseMove);
+		window.addEventListener("mousedown", handleMouseDown);
+		window.addEventListener("mouseup", handleMouseUp);
+
+		// Animation with seamless camera movement
+		const clock = new THREE.Clock();
+		let animationId;
+		const entranceDuration = 4.5; // 2.5 seconds for entrance animation
+
+		const tick = () => {
+			const elapsedTime = clock.getElapsedTime();
+			const deltaTime = clock.getDelta();
+
+			// Update bloom strength with smooth transition
+			currentBloomStrength +=
+				(targetBloomStrength - currentBloomStrength) * bloomTransitionSpeed * deltaTime;
+			bloomPass.strength = currentBloomStrength;
+
+			// Debug bloom strength (remove after testing)
+			if (Math.abs(currentBloomStrength - targetBloomStrength) < 0.01) {
+				// Only log when close to target to avoid spam
+				if (elapsedTime % 2 < 0.016) {
+					// Log every 2 seconds approximately
+					console.log("Current bloom strength:", currentBloomStrength.toFixed(2));
+				}
+			}
+
+			// Update camera rotation with damping (orbit-like control)
+			cameraRotationCurrent += (cameraRotationTarget - cameraRotationCurrent) * rotationDamping;
+
+			// Seamless camera movement combining entrance and S-curve motion
+			const progress = Math.min(elapsedTime / entranceDuration, 1.0);
+			const easeOutCubic = 1 - Math.pow(1 - progress, 3);
+
+			// Base position from entrance animation
+			const baseZ = 3.5 + (finalCameraPosition.z - 3.5) * easeOutCubic;
+
+			// S-curve camera movement (always running, but starts small)
+			const continuousIntensity = Math.min(elapsedTime / (entranceDuration * 0.5), 1.0);
+			const time = elapsedTime * 1.4; // Speed of S-curve movement
+
+			// Create S-shaped path using parametric curves
+			// X-axis: horizontal S-curve + orbit control rotation
+			const baseSWaveX = Math.sin(time) * (1 + Math.cos(time * 0.3) * 0.5);
+			const sCurveX = baseSWaveX * 0.05 * continuousIntensity;
+
+			// Apply orbit control rotation to X position
+			const orbitRadius = 1.2;
+			const orbitInfluenceX = Math.sin(cameraRotationCurrent) * orbitRadius * 0.1;
+
+			// Y-axis: vertical S-curve with different phase (disabled by user)
+			const sWaveY = 0 * Math.sin(time * 0.7 + Math.PI / 4) * (1 + Math.cos(time * 0.5) * 0.3);
+			const sCurveY = sWaveY * 0.03 * continuousIntensity;
+
+			// Apply combined movement with S-curve path and orbit control
+			camera.position.x = sCurveX + orbitInfluenceX;
+			camera.position.y = finalCameraPosition.y;
+			camera.position.z = baseZ;
+
+			// Record actual camera position history for S-curve trail
+			const newTrailPoint = new THREE.Vector3(
+				camera.position.x, // Actual camera X position
+				0.01, // Fixed above terrain
+				0.3, // Fixed depth for visibility
+			);
+
+			// Add new point and maintain trail length
+			trailPoints.unshift(newTrailPoint);
+			if (trailPoints.length > trailLength) {
+				trailPoints.pop();
+			}
+
+			// Update trail particles to show actual S-curve movement
+			trailSpheres.forEach((sphere, index) => {
+				if (index < trailPoints.length) {
+					const point = trailPoints[index];
+
+					// Position particles along the actual movement path with small offsets
+					sphere.position.set(
+						point.x, // Use actual recorded X position for S-curve
+						point.y, // Small vertical wave for visual interest
+						point.z + Math.sin(index * 2.9) * 0.15, // Closer spacing for denser trail
+					);
+
+					// Fade particles based on age and animation progress
+					const opacity = (1.0 - index * 0.06) * Math.max(0.6, continuousIntensity);
+					(sphere.material as THREE.MeshBasicMaterial).opacity = Math.max(0.2, opacity);
+				}
+			});
+
+			// Update snowboard position to follow camera movement
+			if (snowboard) {
+				// Position snowboard slightly behind camera to show it's carving the trail
+				snowboard.position.x = camera.position.x;
+				snowboard.position.y = 0.02; // Just above the terrain
+				snowboard.position.z = camera.position.z - 0.25; // Behind camera
+
+				// Rotate snowboard based on horizontal movement for realistic carving effect
+				const horizontalVelocity = sCurveX * 10; // Amplify for visible rotation
+				const verticalVelocity = sCurveY * 10; // Amplify for visible rotation
+				snowboard.rotation.y = -Math.PI / 2 + horizontalVelocity * 0.4; // Slight turn
+				snowboard.rotation.z = verticalVelocity * 10; // Slight tilt
+			}
+
+			// Update snowfall particles
+			const snowPositions = snowflakes.geometry.attributes.position.array as Float32Array;
+			for (let i = 0; i < snowflakeCount; i++) {
+				const i3 = i * 3;
+
+				// Update positions based on velocities
+				snowPositions[i3] += snowflakeVelocities[i3]; // X
+				snowPositions[i3 + 1] += snowflakeVelocities[i3 + 1]; // Y
+				snowPositions[i3 + 2] += snowflakeVelocities[i3 + 2]; // Z
+
+				// Reset snowflakes that have fallen below terrain or moved too far
+				if (snowPositions[i3 + 1] < -0.5 || Math.abs(snowPositions[i3]) > 3) {
+					snowPositions[i3] = (Math.random() - 0.5) * 4; // X
+					snowPositions[i3 + 1] = Math.random() * 2 + 2; // Y (high up)
+					snowPositions[i3 + 2] = (Math.random() - 0.5) * 4; // Z
+				}
+			}
+			snowflakes.geometry.attributes.position.needsUpdate = true;
+
+			// Update plane position (continuous from start)
+			plane.position.z = ((elapsedTime * 0.15) % 2) + 0.15;
+			plane2.position.z = ((elapsedTime * 0.15) % 2) - 2 + 0.15;
+
+			// Render
+			effectComposer.render();
+
+			// Call tick again on the next frame
+			animationId = window.requestAnimationFrame(tick);
+		};
+
+		tick();
+
+		console.log(
+			"Vaporwave effect initialized successfully with continuous camera movement and blue style",
+		);
+
+		// Cleanup
+		return () => {
+			window.removeEventListener("resize", handleResize);
+			window.removeEventListener("mousemove", handleMouseMove);
+			window.removeEventListener("mousedown", handleMouseDown);
+			window.removeEventListener("mouseup", handleMouseUp);
+			if (animationId) {
+				cancelAnimationFrame(animationId);
+			}
+
+			// Clean up trail spheres
+			trailSpheres.forEach((sphere) => {
+				sphere.geometry.dispose();
+				(sphere.material as THREE.MeshBasicMaterial).dispose();
+				scene.remove(sphere);
+			});
+
+			// Clean up snowboard
+			if (snowboard) {
+				snowboard.traverse((child) => {
+					if (child instanceof THREE.Mesh) {
+						child.geometry.dispose();
+						if (child.material instanceof THREE.Material) {
+							child.material.dispose();
+						}
+					}
+				});
+				scene.remove(snowboard);
+			}
+
+			// Clean up snowfall particles
+			if (snowflakes) {
+				snowflakes.geometry.dispose();
+				(snowflakes.material as THREE.PointsMaterial).dispose();
+				scene.remove(snowflakes);
+			}
+
+			renderer.dispose();
+			effectComposer.dispose();
+		};
+	}
+
+	// Initialize
+	let cleanup;
+
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", () => {
+			cleanup = initVaporwave();
+		});
+	} else {
+		cleanup = initVaporwave();
+	}
+
+	window.addEventListener("beforeunload", () => {
+		if (cleanup) cleanup();
+	});
 </script>
 
 <style>
-  #vaporwave-container {
-    pointer-events: none;
-    z-index: 2;
-  }
+	#vaporwave-container {
+		pointer-events: auto; /* 允许鼠标交互 */
+		z-index: 2;
+	}
 
-  .webgl {
-    position: fixed;
-    top: 0;
-    left: 0;
-    outline: none;
-    mix-blend-mode: screen;
-    opacity: 0.4; /* 更透明，让底图可见 */
-  }
-</style> 
+	.webgl {
+		position: relative;
+		top: 0;
+		left: 0;
+		outline: none;
+		mix-blend-mode: screen;
+		opacity: 1; /* 更透明，让底图可见 */
+		cursor: grab; /* 显示可拖拽的光标 */
+	}
+
+	.webgl:active {
+		cursor: grabbing; /* 拖拽时的光标 */
+	}
+</style>

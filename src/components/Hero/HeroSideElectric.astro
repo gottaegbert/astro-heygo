@@ -18,7 +18,7 @@ import { useTranslations } from "@js/translationUtils";
 import heroImage from "@images/hero.jpeg";
 
 interface Props {
-  enableVaporwave?: boolean;
+	enableVaporwave?: boolean;
 }
 
 const { enableVaporwave = false } = Astro.props;
@@ -27,13 +27,13 @@ const t = useTranslations(currLocale);
 ---
 
 <!-- "dark" class forces dark mode for this section -->
-<section id="hero-electric" class="dark mt-14 overflow-x-clip relative min-h-screen">
+<section id="hero-electric" class="dark relative mt-14 min-h-screen overflow-x-clip">
 	<!-- Background Image -->
-	<div class="absolute inset-0 w-full h-full">
+	<div class="absolute inset-0 h-full w-full">
 		<Image
 			src={heroImage}
 			alt="Snowboarder carving down pristine mountain slopes"
-			class="w-full h-full object-cover"
+			class="h-full w-full object-cover"
 			loading="eager"
 			width={1920}
 			height={1080}
@@ -42,68 +42,61 @@ const t = useTranslations(currLocale);
 		<div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent"></div>
 		<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30"></div>
 	</div>
-	
+
 	<!-- Vaporwave Three.js Effect - only enabled when specified -->
 	<VaporwaveHero enabled={enableVaporwave} />
-	
-	<div class="site-container mx-auto px-4 pb-16 pt-20 md:pt-32 relative z-20">
 
-		
-		
-		<div class="mx-auto my-auto w-full pt-4 pb-10  md:max-w-[560px] md:pt-10 lg:pr-10">
-				
-									<!-- <div class=" h-[469px] w-full bg-transparent overflow-hidden">
+	<div
+		class="site-container relative z-20 mx-auto flex flex-col items-center px-4 pt-20 pb-16 md:pt-32"
+	>
+		<div class="mx-auto my-auto w-full pt-4 pb-10 text-center md:max-w-[560px] md:pt-10 lg:pr-10">
+			<!-- <div class=" h-[469px] w-full bg-transparent overflow-hidden">
 										<HeyGoDigitalMountain />
 									</div> -->
-			
-				
-				<div
-					class="mx-auto max-w-[527px] md:ml-0"
-					data-aos="fade-up"
-					data-aos-trigger="#hero-electric"
-				>
-									<h1
-					class="text-white mb-6 text-[56px] leading-[1.36] font-semibold tracking-tight text-pretty md:leading-[1.36]"
+
+			<div
+				class="mx-auto max-w-[527px] md:ml-0"
+				data-aos="fade-up"
+				data-aos-trigger="#hero-electric"
+				style="text-align: center;"
+			>
+				<h1
+					class="mb-6 text-[56px] leading-[1.36] font-semibold tracking-tight text-pretty text-white md:leading-[1.36]"
 					style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);"
 				>
 					HeyGo
 				</h1>
-				<h2 class="text-white text-[32px] leading-[1.36] font-medium mb-4"
+				<h2
+					class="mb-4 text-[32px] leading-[1.36] font-medium text-white"
 					style="text-shadow: 1px 1px 3px rgba(0,0,0,0.8);"
 				>
-					Your AI Snowboarding Coach, 
-					Effortless Ride Made Easy
+					Your AI Snowboarding Coach, Effortless Ride Made Easy
 				</h2>
-					
-				</div>
-							<p
-				class="text-white mb-8 text-base leading-[1.36] text-pretty lg:text-base max-w-[464px]"
+			</div>
+			<p
+				class="mb-8 max-w-[464px] text-base leading-[1.36] text-pretty text-white lg:text-base"
 				data-aos="fade-up"
 				data-aos-delay=".1"
 				data-aos-trigger="#hero-electric"
 				style="text-shadow: 1px 1px 2px rgba(0,0,0,0.8);"
 			>
-				HeyGo gives snowboarders the real-time insights and precision feedback once only available to pros.
+				HeyGo gives snowboarders the real-time insights and precision feedback once only available
+				to pros.
 			</p>
-				<div
-					class="mt-6 flex flex-wrap justify-start gap-4"
-					data-aos="fade-up"
-					data-aos-delay=".2"
-					data-aos-trigger="#hero-electric"
-				>
-									<Button 
-					variant="secondary" 
-					class="bg-white/95 text-black hover:bg-white rounded-full px-9 py-4 text-2xl font-semibold flex items-center gap-3 backdrop-blur-sm shadow-lg border border-white/20"
+			<div
+				class="mt-6 flex flex-wrap justify-center gap-4"
+				data-aos="fade-up"
+				data-aos-delay=".2"
+				data-aos-trigger="#hero-electric"
+			>
+				<Button
+					variant="secondary"
+					class="flex items-center gap-3 rounded-full border border-white/20 bg-white/95 px-9 py-4 text-2xl font-semibold text-black shadow-lg backdrop-blur-sm hover:bg-white"
 					href={getRelativeLocaleUrl(currLocale, "/contact")}
 				>
-						Contact us
-						<Icon 
-							name="arrow-right"
-							class="mr-1.5 -ml-1 size-3 opacity-70"
-							aria-hidden="true"
-						/>
-					</Button>
-				</div>
+					Contact us
+					<Icon name="arrow-right" class="mr-1.5 -ml-1 size-3 opacity-70" aria-hidden="true" />
+				</Button>
 			</div>
 		</div>
 	</div>
