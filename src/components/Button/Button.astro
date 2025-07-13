@@ -9,7 +9,14 @@ import { Icon } from "astro-icon/components";
  *  you can pass the arrow prop with "left" or "right" to add an arrow to any button variant
  */
 interface Props extends HTMLAttributes<"button">, Omit<HTMLAttributes<"a">, "type"> {
-	variant?: "primary" | "secondary" | "outline" | "ghost";
+	variant?:
+		| "primary"
+		| "secondary"
+		| "outline"
+		| "ghost"
+		| "snowboard"
+		| "vaporwave"
+		| "snowboard-outline";
 	arrow?: "left" | "right" | "none";
 }
 
@@ -36,6 +43,9 @@ if (Astro.props.href) {
 		},
 		{
 			"button--ghost": variant === "ghost",
+		},
+		{
+			"button--snowboard": variant === "snowboard",
 		},
 	]}
 	{...rest}

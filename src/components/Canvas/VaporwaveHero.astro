@@ -61,7 +61,7 @@ const { enabled = false } = Astro.props;
 
 		// Plane with exact same parameters
 		const parameters = {
-			displacementScale: 0.4,
+			displacementScale: 0.6,
 			metalness: 1,
 			roughness: 0.5,
 		};
@@ -91,25 +91,25 @@ const { enabled = false } = Astro.props;
 
 		// Create camera trail - simplified approach with visible test objects
 		const trailPoints: THREE.Vector3[] = [];
-		const trailLength = 8; // More trail points for smoother S-curve
+		const trailLength = 16; // More trail points for smoother S-curve
 		const trailSpheres: THREE.Mesh[] = []; // Array to store trail spheres
 
 		// Initialize trail points
 		for (let i = 0; i < trailLength; i++) {
-			trailPoints.push(new THREE.Vector3(0, 0.1, i * 0.15)); // Start above terrain with closer spacing
+			trailPoints.push(new THREE.Vector3(0, 0.1, i)); // Start above terrain with closer spacing
 		}
 
 		// Create trail using tiny line-like particles for S-curve effect
 		for (let i = 0; i < trailLength; i++) {
-			const geometry = new THREE.SphereGeometry(0.003 + i * 0.0001, 4, 4); // Very small spheres for line effect
+			const geometry = new THREE.BoxGeometry(0.01, 0.01, 0.01); // Very small spheres for line effect
 			const material = new THREE.MeshBasicMaterial({
-				color: 0x00ffff, // Bright cyan to blue gradient
-				opacity: 1.0 - i * 0.03, // Slower fade for better visibility
+				color: 0x00cccc, // Bright cyan to blue gradient
+				opacity: 1.0 - i * 0.09, // Slower fade for better visibility
 			});
 			const sphere = new THREE.Mesh(geometry, material);
 
 			// Position spheres initially above terrain
-			sphere.position.set(0, 0.01, 0.3 + i * 0.15);
+			sphere.position.set(0, 0.01, 0);
 			scene.add(sphere);
 			trailSpheres.push(sphere);
 		}
@@ -184,7 +184,7 @@ const { enabled = false } = Astro.props;
 		// Create snowflake material with subtle glow
 		const snowflakeMaterial = new THREE.PointsMaterial({
 			color: 0x00ffff,
-			size: 0.001,
+			size: 0.004,
 			transparent: true,
 			opacity: 0.9,
 			alphaTest: 0.1,
@@ -460,6 +460,10 @@ const { enabled = false } = Astro.props;
 				}
 			}
 			snowflakes.geometry.attributes.position.needsUpdate = true;
+
+			// Animate displacement scale between 0.4 and 0.6
+			const displacementCycle = 0.5 + Math.sin(elapsedTime * 0.8) * 0.1; // Cycles between 0.4 and 0.6
+			material.displacementScale = displacementCycle;
 
 			// Update plane position (continuous from start)
 			plane.position.z = ((elapsedTime * 0.15) % 2) + 0.15;

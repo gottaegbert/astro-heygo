@@ -1,31 +1,133 @@
-/* buttons, 4 types "primary", "secondary", "outline", "ghost" */
+/* buttons, 5 types "primary", "secondary", "outline", "ghost", "snowboard" */
 .button {
-	@apply flex items-center justify-center rounded-full px-5 py-2.5 font-medium tracking-tight transition-(--button-transition-properties) duration-300;
+	@apply flex items-center justify-center rounded-full px-5 py-2.5 font-medium tracking-tight;
 	@apply focus:outline-none;
-	@apply disabled:pointer-events-none;
+	@apply disabled:pointer-events-none disabled:opacity-50;
+	@apply transition-all duration-300 ease-in-out;
+	@apply cursor-pointer;
 }
 
 .button--primary {
-	@apply border-primary-600 from-primary-700 to-primary-700 relative border bg-gradient-to-t text-white;
-	@apply before:bg-primary-500 before:absolute before:-inset-0.5 before:-z-10 before:rounded-full before:opacity-0 before:blur-sm before:transition before:duration-300;
-	@apply dark:hover:border-primary-300 hover:before:opacity-100;
+	@apply border-primary-600 from-primary-700 to-primary-600 relative border bg-gradient-to-t text-white;
+	@apply shadow-lg hover:shadow-xl;
+	@apply hover:from-primary-600 hover:to-primary-500 hover:border-primary-500;
 	@apply focus-visible:ring-primary-300 focus-visible:ring-4;
+	@apply active:scale-95 active:shadow-md;
+}
+
+.button--primary::before {
+	@apply bg-primary-500 absolute -inset-0.5 -z-10 rounded-full opacity-0 blur-sm transition-opacity duration-300;
+	content: "";
+}
+
+.button--primary:hover::before {
+	@apply opacity-100;
 }
 
 .button--secondary {
 	@apply border-base-300 bg-base-50 text-base-800 border;
-	@apply hover:bg-base-100;
+	@apply shadow-sm hover:shadow-md;
+	@apply hover:bg-base-100 hover:border-base-400;
 	@apply focus-visible:ring-primary-500 focus-visible:ring-4;
+	@apply active:scale-95;
+	@apply dark:bg-base-800 dark:text-base-100 dark:border-base-700;
+	@apply dark:hover:bg-base-700 dark:hover:border-base-600;
 }
 
 .button--outline {
-	@apply border-base-400 text-base-900 dark:border-base-600 dark:text-base-100 border bg-transparent;
-	@apply hover:bg-base-800 dark:hover:border-base-100 dark:hover:bg-base-100 dark:hover:text-base-900 hover:text-white;
-	@apply focus-visible:ring-primary-500 focus-visible:ring-4;
+	@apply border-primary-500 text-primary-600 border-2 bg-transparent;
+	@apply hover:bg-primary-500 hover:border-primary-500 hover:text-white;
+	@apply focus-visible:ring-primary-300 focus-visible:ring-4;
+	@apply active:scale-95;
+	@apply dark:border-primary-400 dark:text-primary-400;
+	@apply dark:hover:bg-primary-400 dark:hover:text-base-900;
+	@apply transition-all duration-300;
 }
 
 .button--ghost {
-	@apply text-foreground/80 bg-transparent;
-	@apply hover:bg-base-200 hover:text-foreground dark:hover:bg-base-900;
+	@apply text-base-700 border-0 bg-transparent;
+	@apply hover:bg-base-200 hover:text-base-900;
 	@apply focus-visible:ring-primary-500 focus-visible:ring-4;
+	@apply active:scale-95;
+	@apply dark:text-base-300 dark:hover:bg-base-800 dark:hover:text-base-100;
+}
+
+.button--vaporwave {
+	@apply bg-gradient-to-r from-cyan-500 to-blue-500 text-white;
+	@apply hover:from-blue-500 hover:to-cyan-500;
+	@apply focus-visible:ring-4 focus-visible:ring-cyan-300;
+	@apply active:scale-95;
+	@apply dark:from-cyan-500 dark:to-blue-500;
+	@apply dark:hover:from-blue-500 dark:hover:to-cyan-500;
+	@apply dark:focus-visible:ring-cyan-300;
+	@apply dark:focus-visible:ring-4;
+	@apply dark:active:scale-95;
+}
+
+.button--snowboard {
+	/* Snowboard-like shape with curved ends */
+	border-radius: 50px / 25px !important;
+	background: linear-gradient(135deg, #00ffff 0%, #0099ff 50%, #0066cc 100%);
+	color: white;
+	border: 2px solid #00ffff;
+	position: relative;
+	overflow: hidden;
+	min-width: 120px;
+	transform: perspective(1000px) rotateX(5deg);
+	transition: all 0.3s ease;
+	box-shadow:
+		0 4px 15px rgba(0, 255, 255, 0.3),
+		inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.button--snowboard::before {
+	content: "";
+	position: absolute;
+	top: -4px;
+	left: -4px;
+	right: -4px;
+	bottom: -4px;
+	background: linear-gradient(135deg, #00ffff, #0099ff, #00ffff);
+	border-radius: 54px / 29px;
+	opacity: 0;
+	transition: opacity 0.3s ease;
+	z-index: -1;
+	filter: blur(8px);
+}
+
+.button--snowboard:hover {
+	transform: perspective(1000px) rotateX(0deg) scale(1.05);
+	box-shadow:
+		0 8px 25px rgba(0, 255, 255, 0.5),
+		inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.button--snowboard:hover::before {
+	opacity: 0.7;
+}
+
+.button--snowboard:active {
+	transform: perspective(1000px) rotateX(2deg) scale(0.98);
+	box-shadow:
+		0 2px 10px rgba(0, 255, 255, 0.4),
+		inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.button--snowboard:focus-visible {
+	outline: none;
+	box-shadow:
+		0 0 0 3px rgba(0, 255, 255, 0.4),
+		0 4px 15px rgba(0, 255, 255, 0.3),
+		inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.button--snowboard:disabled {
+	opacity: 0.5;
+	transform: none;
+	box-shadow: none;
+	cursor: not-allowed;
+}
+
+.button--snowboard:disabled::before {
+	opacity: 0;
 }

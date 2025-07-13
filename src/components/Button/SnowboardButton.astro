@@ -1,0 +1,202 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import { Icon } from "astro-icon/components";
+
+interface Props extends HTMLAttributes<"button">, Omit<HTMLAttributes<"a">, "type"> {
+	arrow?: "left" | "right" | "none";
+	size?: "sm" | "md" | "lg";
+}
+
+const { arrow = "none", size = "md", class: className, ...rest } = Astro.props;
+
+let Component = "button";
+if (Astro.props.href) {
+	Component = "a";
+}
+
+// Size configurations
+const sizeClasses = {
+	sm: "px-4 py-2 text-sm min-w-[140px]",
+	md: "px-6 py-3 text-xll min-w-[240px]",
+	lg: "px-8 py-4 text-xll min-w-[300px]",
+};
+---
+
+<Component class:list={["snowboard-btn", sizeClasses[size], className]} {...rest}>
+	{arrow === "left" && <Icon name="tabler/chevron-left" class="mr-2 size-4" aria-hidden="true" />}
+	<slot />
+	{arrow === "right" && <Icon name="tabler/chevron-right" class="ml-2 size-4" aria-hidden="true" />}
+</Component>
+
+<style>
+	.snowboard-btn {
+		/* Base snowboard shape */
+		border-radius: 50px 50px 50px 50px / 25px 25px 25px 25px;
+		background: linear-gradient(135deg, #00ffff 0%, #0099ff 50%, #0066cc 100%);
+		color: white;
+		border: 2px solid #00ffff;
+		color: #000000;
+
+		/* Layout */
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		font-weight: 600;
+		font-family:
+			system-ui,
+			-apple-system,
+			sans-serif;
+		text-decoration: none;
+		cursor: pointer;
+
+		/* 3D Effect */
+		position: relative;
+		overflow: hidden;
+		transform: perspective(1000px) rotateX(5deg);
+
+		/* Transitions */
+		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+		/* Shadows */
+		box-shadow:
+			0 4px 15px rgba(0, 255, 255, 0.3),
+			inset 0 1px 0 rgba(255, 255, 255, 0.2),
+			0 0 0 0 rgba(0, 255, 255, 0);
+	}
+	.snowboard-btn:hover {
+		background: linear-gradient(135deg, #00ffff, #0099ff, #00ffff, #0099ff);
+		background-size: 200% 100%;
+		animation: gradientMove 5s ease-in-out infinite;
+	}
+
+	@keyframes gradientMove {
+		0% {
+			background-position: 0% 50%;
+		}
+		50% {
+			background-position: 100% 50%;
+		}
+		100% {
+			background-position: 0% 50%;
+		}
+	}
+
+	/* Glowing background effect */
+	.snowboard-btn::before {
+		content: "";
+		position: absolute;
+		top: -4px;
+		left: -4px;
+		right: -4px;
+		bottom: -4px;
+		background: linear-gradient(135deg, #00ffff, #0099ff, #00ffff);
+		border-radius: 54px 54px 54px 54px / 29px 29px 29px 29px;
+		opacity: 0;
+		z-index: -1;
+		filter: blur(8px);
+		transition: opacity 0.3s ease;
+	}
+
+	/* Hover Effects */
+	.snowboard-btn:hover {
+		transform: perspective(1000px) rotateX(0deg) scale(1.05);
+		box-shadow:
+			0 8px 25px rgba(0, 255, 255, 0.5),
+			inset 0 1px 0 rgba(255, 255, 255, 0.3),
+			0 0 0 3px rgba(0, 255, 255, 0.2);
+	}
+
+	.snowboard-btn:hover::before {
+		opacity: 0.7;
+	}
+
+	/* Active State */
+	.snowboard-btn:active {
+		transform: perspective(1000px) rotateX(2deg) scale(0.98);
+		box-shadow:
+			0 2px 10px rgba(0, 255, 255, 0.4),
+			inset 0 1px 0 rgba(255, 255, 255, 0.2);
+	}
+
+	/* Focus State */
+	.snowboard-btn:focus-visible {
+		outline: none;
+		box-shadow:
+			0 0 0 4px rgba(0, 255, 255, 0.4),
+			0 4px 15px rgba(0, 255, 255, 0.3),
+			inset 0 1px 0 rgba(255, 255, 255, 0.2);
+	}
+
+	/* Disabled State */
+	.snowboard-btn:disabled {
+		opacity: 0.5;
+		transform: perspective(1000px) rotateX(5deg);
+		box-shadow: 0 2px 8px rgba(0, 255, 255, 0.2);
+		cursor: not-allowed;
+		pointer-events: none;
+	}
+
+	.snowboard-btn:disabled::before {
+		opacity: 0;
+	}
+
+	/* Pulse animation on load */
+	.snowboard-btn {
+		animation: snowboard-intro 0.6s ease-out;
+	}
+
+	@keyframes snowboard-intro {
+		0% {
+			opacity: 0;
+			transform: perspective(1000px) rotateX(15deg) scale(0.9);
+		}
+		100% {
+			opacity: 1;
+			transform: perspective(1000px) rotateX(5deg) scale(1);
+		}
+	}
+
+	/* Text effects */
+	.snowboard-btn {
+		letter-spacing: 0.025em;
+	}
+
+	/* Responsive adjustments */
+	@media (max-width: 640px) {
+		.snowboard-btn {
+			transform: perspective(800px) rotateX(3deg);
+			min-width: 100px;
+		}
+
+		.snowboard-btn:hover {
+			transform: perspective(800px) rotateX(0deg) scale(1.02);
+		}
+	}
+
+	/* High contrast mode support */
+	@media (prefers-contrast: high) {
+		.snowboard-btn {
+			border-width: 3px;
+			text-shadow: none;
+		}
+	}
+
+	/* Reduced motion support */
+	@media (prefers-reduced-motion: reduce) {
+		.snowboard-btn {
+			transform: none;
+			animation: none;
+			transition:
+				background-color 0.2s,
+				box-shadow 0.2s;
+		}
+
+		.snowboard-btn:hover {
+			transform: none;
+		}
+
+		.snowboard-btn:active {
+			transform: none;
+		}
+	}
+</style>

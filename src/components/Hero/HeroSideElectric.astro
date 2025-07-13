@@ -5,7 +5,7 @@
 import { Icon } from "astro-icon/components";
 import { Image } from "astro:assets";
 import { getRelativeLocaleUrl } from "astro:i18n";
-
+import SnowboardButton from "@components/Button/SnowboardButton.astro";
 // components
 import Button from "@components/Button/Button.astro";
 import HeyGoDigitalMountain from "@components/Canvas/HeyGoDigitalMountain.astro";
@@ -60,12 +60,12 @@ const t = useTranslations(currLocale);
 				data-aos-trigger="#hero-electric"
 				style="text-align: center;"
 			>
-				<h1
+				<!-- <h1
 					class="mb-6 text-[56px] leading-[1.36] font-semibold tracking-tight text-pretty text-white md:leading-[1.36]"
 					style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);"
 				>
 					HeyGo
-				</h1>
+				</h1> -->
 				<h2
 					class="mb-4 text-[32px] leading-[1.36] font-medium text-white"
 					style="text-shadow: 1px 1px 3px rgba(0,0,0,0.8);"
@@ -73,7 +73,7 @@ const t = useTranslations(currLocale);
 					Your AI Snowboarding Coach, Effortless Ride Made Easy
 				</h2>
 			</div>
-			<p
+			<!-- <p
 				class="mb-8 max-w-[464px] text-base leading-[1.36] text-pretty text-white lg:text-base"
 				data-aos="fade-up"
 				data-aos-delay=".1"
@@ -82,21 +82,20 @@ const t = useTranslations(currLocale);
 			>
 				HeyGo gives snowboarders the real-time insights and precision feedback once only available
 				to pros.
-			</p>
+			</p> -->
 			<div
 				class="mt-6 flex flex-wrap justify-center gap-4"
 				data-aos="fade-up"
 				data-aos-delay=".2"
 				data-aos-trigger="#hero-electric"
 			>
-				<Button
-					variant="secondary"
+				<SnowboardButton
 					class="flex items-center gap-3 rounded-full border border-white/20 bg-white/95 px-9 py-4 text-2xl font-semibold text-black shadow-lg backdrop-blur-sm hover:bg-white"
 					href={getRelativeLocaleUrl(currLocale, "/contact")}
 				>
-					Contact us
-					<Icon name="arrow-right" class="mr-1.5 -ml-1 size-3 opacity-70" aria-hidden="true" />
-				</Button>
+					Contact Us
+					<!-- <Icon name="arrow-right" class="mr-1.5 -ml-1 size-3 opacity-70" aria-hidden="true" /> -->
+				</SnowboardButton>
 			</div>
 		</div>
 	</div>
