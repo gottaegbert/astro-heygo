@@ -1,4 +1,14 @@
 {
-  "mcpServers": {
-  }
+	"mcpServers": {
+		"Framelink Figma MCP": {
+			"command": "npx",
+			"args": ["-y", "figma-developer-mcp", "--stdio"],
+			"env": {
+				"FIGMA_API_KEY": "figd_fxESLEXJo1o9wx34dCoN5OIhlUqjLpUPJr--GZuQ"
+			}
+		},
+		"Figma Dev Mode MCP": {
+			"url": "http://127.0.0.1:3845/sse"
+		}
+	}
 }

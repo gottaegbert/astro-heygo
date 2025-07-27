@@ -79,3 +79,11 @@ export interface SiteSettingsProps {
 	useViewTransitions?: boolean;
 	useAnimations?: boolean;
 }
+
+// --------------------------------------------------------
+// theme settings types
+export interface ThemeSettingsProps {
+	defaultTheme: "dark" | "light";
+	enableThemeToggle: boolean;
+	useSystemPreference: boolean;
+}
