@@ -1,6 +1,6 @@
 ---
 import { type CollectionEntry } from "astro:content";
-import { ClientRouter } from "astro:transitions";
+import { ViewTransitions } from "astro:transitions";
 
 // component imports
 import Seo from "@components/Seo/Seo.astro";
@@ -102,4 +102,4 @@ const {
 />
 
 <!-- no fallback as I saw issues with firefox fallback -->
-{siteSettings.useViewTransitions && <ClientRouter fallback="none" />}
+{siteSettings.useViewTransitions && <ViewTransitions fallback="none" />}

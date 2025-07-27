@@ -11,6 +11,7 @@ import keystatic from "@keystatic/astro";
 
 export default defineConfig({
 	site: "https://amplify.cosmicthemes.com",
+	viewTransitions: true,
 	adapter: cloudflare({
 		imageService: "cloudflare",
 		platformProxy: true

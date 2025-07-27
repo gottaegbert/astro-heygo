@@ -95,24 +95,24 @@ const { enabled = false } = Astro.props;
 		const trailSpheres: THREE.Mesh[] = []; // Array to store trail spheres
 
 		// Initialize trail points
-		for (let i = 0; i < trailLength; i++) {
-			trailPoints.push(new THREE.Vector3(0, 0.1, i)); // Start above terrain with closer spacing
-		}
+		// for (let i = 0; i < trailLength; i++) {
+		// 	trailPoints.push(new THREE.Vector3(0, 0.1, i)); // Start above terrain with closer spacing
+		// }
 
-		// Create trail using tiny line-like particles for S-curve effect
-		for (let i = 0; i < trailLength; i++) {
-			const geometry = new THREE.BoxGeometry(0.01, 0.01, 0.01); // Very small spheres for line effect
-			const material = new THREE.MeshBasicMaterial({
-				color: 0x00cccc, // Bright cyan to blue gradient
-				opacity: 1.0 - i * 0.09, // Slower fade for better visibility
-			});
-			const sphere = new THREE.Mesh(geometry, material);
+		// // Create trail using tiny line-like particles for S-curve effect
+		// for (let i = 0; i < trailLength; i++) {
+		// 	const geometry = new THREE.BoxGeometry(0.01, 0.01, 0.01); // Very small spheres for line effect
+		// 	const material = new THREE.MeshBasicMaterial({
+		// 		color: 0x00cccc, // Bright cyan to blue gradient
+		// 		opacity: 1.0 - i * 0.09, // Slower fade for better visibility
+		// 	});
+		// 	const sphere = new THREE.Mesh(geometry, material);
 
-			// Position spheres initially above terrain
-			sphere.position.set(0, 0.01, 0);
-			scene.add(sphere);
-			trailSpheres.push(sphere);
-		}
+		// 	// Position spheres initially above terrain
+		// 	sphere.position.set(0, 0.01, 0);
+		// 	scene.add(sphere);
+		// 	trailSpheres.push(sphere);
+		// }
 
 		console.log("Trail spheres created:", trailSpheres.length);
 
@@ -147,7 +147,7 @@ const { enabled = false } = Astro.props;
 					}
 				});
 
-				scene.add(snowboard);
+				// scene.add(snowboard);
 				console.log("Snowboard loaded and added to scene");
 			},
 			(progress) => {
@@ -345,7 +345,7 @@ const { enabled = false } = Astro.props;
 		// Animation with seamless camera movement
 		const clock = new THREE.Clock();
 		let animationId;
-		const entranceDuration = 4.5; // 2.5 seconds for entrance animation
+		const entranceDuration = 2.5; // 2.5 seconds for entrance animation
 
 		const tick = () => {
 			const elapsedTime = clock.getElapsedTime();

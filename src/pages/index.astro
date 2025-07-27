@@ -4,6 +4,7 @@ import BaseLayout from "@layouts/BaseLayout.astro";
 
 // components
 import HeroSideElectric from "@components/Hero/HeroSideElectric.astro";
+import Carousel from "@components/Carousel/Carousel.astro";
 
 // New HeyGo feature components
 import FeatureDataVisualization from "@components/Feature/FeatureDataVisualization.astro";
@@ -26,14 +27,15 @@ const siteData = getTranslatedData("siteData", currLocale);
 
 <BaseLayout title={siteData.title} description={siteData.description}>
 	<HeroSideElectric enableVaporwave={true} />
-	
+	<Carousel />
+
 	<FeatureDataVisualization />
 	<FeatureVideoAnalysis />
 	<FeatureAICoach />
 	<FeatureTrainTogether />
 	<FeatureSensors />
-	
+
 	<CtaCardBgImage />
-	
+
 	<FooterHeyGo />
 </BaseLayout>

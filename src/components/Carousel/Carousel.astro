@@ -1,0 +1,144 @@
+---
+/**
+ * Carousel component for HeyGo homepage
+ * 3 slides, each with image and text, Figma-inspired
+ */
+import skiImg from "@images/ski.jpeg";
+import heroImg from "@images/hero.jpeg";
+import stormImg from "@images/storm-1.webp";
+import frame1 from "@images/frame1.png";
+import frame2 from "@images/frame-2.png";
+import frame3 from "@images/frame-3.png";
+---
+
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<div
+	class="z-0 flex h-screen w-full flex-col items-center"
+	x-data={`{
+    current: 0,
+    direction: 'right',
+    slides: [
+      { image: '${frame1.src}', title: 'HeyGo Sensor', subtitle: 'Motion Intelligence, Captured in Full', description: 'A multi-sensor system continuously tracks your posture and ride dynamics — delivering a full-spectrum, quantifiable view of every carve, lean, and line.' },
+      { image: '${heroImg.src}', title: 'HeyGo App', subtitle: 'Data Intelligence, Riding Technique Analysis', description: 'AI analyzes your ride in real time, scoring every run with smart metrics. Your performance is benchmarked against global riders to pinpoint your skill level and progress.' },
+      { image: '${stormImg.src}', title: 'HeyGo Analysis', subtitle: 'Spatial Intelligence, Where Motion Meets Data', description: 'See your riding—frame by frame, data point by data point. HeyGo fuses your ski footage with 3D motion data in real time, revealing how every movement maps to real metrics — and where things go wrong.' }
+    ],
+    interval: null,
+    autoplay() {
+      this.interval = setInterval(() => {
+        this.next();
+      }, 4000);
+    },
+    stopAutoplay() {
+      clearInterval(this.interval);
+      this.interval = null;
+    },
+    goTo(idx) {
+      this.direction = idx > this.current ? 'right' : 'left';
+      this.current = idx;
+    },
+    prev() {
+      this.direction = 'left';
+      this.current = (this.current - 1 + this.slides.length) % this.slides.length;
+    },
+    next() {
+      this.direction = 'right';
+      this.current = (this.current + 1) % this.slides.length;
+    },
+    init() {
+      this.autoplay();
+    }
+  }`}
+	x-init="init()"
+	@mouseenter="stopAutoplay()"
+	@mouseleave="autoplay()"
+	tabindex="0"
+>
+	<div
+		class="relative z-10 h-screen w-full overflow-hidden bg-[#181A1B] shadow-xl"
+		style="min-height: 340px;"
+	>
+		<template x-for="(slide, idx) in slides" :key="idx">
+			<div
+				x-show="current === idx"
+				class="absolute inset-0 flex h-full w-full items-center justify-center"
+				aria-hidden="false"
+			>
+				<div class="grid w-full grid-cols-2 items-center">
+					<div class="h-full w-full pl-32">
+						<img :src="slide.image" :alt="slide.title" class="w-full object-cover" loading="lazy" />
+					</div>
+					<div class="flex flex-col items-start justify-start p-32">
+						<h3
+							class="mb-2 text-center text-2xl font-bold text-white md:text-3xl"
+							x-text="slide.title"
+						>   
+						</h3>
+						<h4
+							class="mb-4 text-center text-xl font-semibold text-[#00e0ff] md:text-2xl"
+							x-text="slide.subtitle"
+						>
+						</h4>
+						<p class="text-start text-base text-white md:text-lg" x-text="slide.description"></p>
+					</div>
+				</div>
+			</div>
+		</template>
+		<!-- Left Arrow -->
+		<button
+			class="absolute top-1/2 left-4 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80 focus:outline-none"
+			@click="prev()"
+			aria-label="Previous slide"
+			type="button"
+		>
+			<svg
+				width="24"
+				height="24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+				stroke-linecap="round"
+				stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg
+			>
+		</button>
+		<!-- Right Arrow -->
+		<button
+			class="absolute top-1/2 right-4 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80 focus:outline-none"
+			@click="next()"
+			aria-label="Next slide"
+			type="button"
+		>
+			<svg
+				width="24"
+				height="24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+				stroke-linecap="round"
+				stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg
+			>
+		</button>
+	</div>
+	<!-- Dots -->
+	<div class="mt-6 flex gap-3">
+		<template x-for="idx in slides.length" :key="idx">
+			<button
+				class="h-3 w-3 rounded-full border-2"
+				:class="current === (idx-1) ? 'bg-[#00e0ff] border-[#00e0ff]' : 'bg-transparent border-white'"
+				aria-label="Go to slide"
+				@click="goTo(idx-1)"
+				type="button"
+			>
+			</button>
+		</template>
+	</div>
+</div>
+<style>
+	/* Hide all but the current slide */
+	[aria-hidden="true"] {
+		pointer-events: none;
+	}
+	/* Smooth transition for slide animation */
+	[x-show] {
+		transition-property: opacity, transform;
+	}
+</style>
