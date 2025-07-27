@@ -22,14 +22,14 @@ const today = new Date();
 	<div class="site-container">
 		<div class="mt-6 flex flex-wrap items-center justify-between gap-6">
 			<SiteLogo />
-			<div class="flex flex-wrap gap-x-10">
+			<!-- <div class="flex flex-wrap gap-x-10">
 				<FooterLink href={getRelativeLocaleUrl(currLocale, "/overview")}>Overview</FooterLink>
 				<FooterLink href={getRelativeLocaleUrl(currLocale, "/blog")}>Blog</FooterLink>
 				<FooterLink href={getRelativeLocaleUrl(currLocale, "/elements")}>Elements</FooterLink>
 				<FooterLink href={getRelativeLocaleUrl(currLocale, "/contact")}>Contact</FooterLink>
 				<FooterLink href={getRelativeLocaleUrl(currLocale, "/terms")}>Terms</FooterLink>
 				<FooterLink href={getRelativeLocaleUrl(currLocale, "/privacy-policy")}>Privacy</FooterLink>
-			</div>
+			</div> -->
 		</div>
 	</div>
 	<div class="border-t-base-200/50 mt-6 border-t text-sm">
@@ -41,18 +41,10 @@ const today = new Date();
 			<!-- Socials -->
 			<div class="flex flex-col">
 				<div class="flex gap-4">
+					<SocialIcon href="https://twitter.com/" icon="tabler/brand-x" social="twitter (x)" />
+					<SocialIcon href="https://twitter.com/" icon="tabler/brand-facebook" social="facebook" />
 					<SocialIcon
-						href="https://twitter.com/BowTiedWebReapr"
-						icon="tabler/brand-x"
-						social="twitter (x)"
-					/>
-					<SocialIcon
-						href="https://twitter.com/BowTiedWebReapr"
-						icon="tabler/brand-facebook"
-						social="facebook"
-					/>
-					<SocialIcon
-						href="https://twitter.com/BowTiedWebReapr"
+						href="https://twitter.com/"
 						icon="tabler/brand-google-filled"
 						social="google"
 					/>

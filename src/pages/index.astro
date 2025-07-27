@@ -7,14 +7,14 @@ import HeroSideElectric from "@components/Hero/HeroSideElectric.astro";
 import Carousel from "@components/Carousel/Carousel.astro";
 
 // New HeyGo feature components
-import FeatureDataVisualization from "@components/Feature/FeatureDataVisualization.astro";
+// import FeatureDataVisualization from "@components/Feature/FeatureDataVisualization.astro";
 import FeatureVideoAnalysis from "@components/Feature/FeatureVideoAnalysis.astro";
 import FeatureAICoach from "@components/Feature/FeatureAICoach.astro";
 import FeatureTrainTogether from "@components/Feature/FeatureTrainTogether.astro";
 import FeatureSensors from "@components/Feature/FeatureSensors.astro";
 
 import CtaCardBgImage from "@components/Cta/CtaCardBgImage.astro";
-import FooterHeyGo from "@components/Footer/FooterHeyGo.astro";
+// import FooterHeyGo from "@components/Footer/FooterHeyGo.astro";
 
 // utils
 import { getLocaleFromUrl } from "@js/localeUtils";
@@ -29,13 +29,13 @@ const siteData = getTranslatedData("siteData", currLocale);
 	<HeroSideElectric enableVaporwave={true} />
 	<Carousel />
 
-	<FeatureDataVisualization />
-	<FeatureVideoAnalysis />
+	<!-- <FeatureDataVisualization /> -->
+	<!-- <FeatureVideoAnalysis />
 	<FeatureAICoach />
 	<FeatureTrainTogether />
-	<FeatureSensors />
+	<FeatureSensors /> -->
 
 	<CtaCardBgImage />
 
-	<FooterHeyGo />
+	<!-- <FooterHeyGo /> -->
 </BaseLayout>
